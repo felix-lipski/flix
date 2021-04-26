@@ -1,13 +1,14 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
+#st-luke:
 { config, pkgs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./graphical
     ];
 
   # Use the GRUB 2 boot loader.
@@ -43,16 +44,17 @@
   # };
 
   # Enable the X11 windowing system.
-  services.xserver = {
-    enable = true;
-    displayManager = {
-      startx.enable = true;
-      defaultSession = "none+dwm";
-    };
-    windowManager.dwm = {
-      enable = true;
-    };
-  };
+#  services.xserver = {
+#    enable = true;
+#    displayManager = {
+#      startx.enable = true;
+#      defaultSession = "none+xmonad";
+#    };
+#    windowManager.xmonad = {
+#      enable = true;
+#      enableContribAndExtras = true;
+#    };
+#  };
 
 
 
@@ -90,11 +92,38 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     wget vim
-    firefox
+    brave    
     git neovim
-    st
+    alacritty
+    dmenu
+    #st
+   # (st.overrideAttrs (oldAttrs: rec {
+   #   src = st-luke;
+   #   #src = fetchFromGitHub {
+   #   #  owner = "LukeSmithxyz";
+   #   #  repo = "st";
+   #   #  rev = "8ab3d03681479263a11b05f7f1b53157f61e8c3b";
+   #   #  sha256 = "1brwnyi1hr56840cdx0qw2y19hpr0haw4la9n0rqdn0r2chl8vag";
+   #   #};
+   #   buildInputs = oldAttrs.buildInputs ++ [ 
+   #     fontconfig freetype xorg.libX11 xorg.libX11.dev xorg.libXft xorg.libXrender 
+   #     harfbuzz 
+   #   ];
+   # }))
   ];
 
+  nixpkgs.overlays = [ ];
+
+  fonts.fonts = with pkgs; [
+    terminus_font
+  ];
+
+
+#  home-manager.users.felix = {
+#    programs.zsh = {
+#      enable = true;
+#    };
+#  };
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
