@@ -1,9 +1,10 @@
 {
   inputs = {
-    nixpkgs.url = github:NixOS/nixpkgs-channels/nixos-unstable;
+    #stable.url = github:NixOS/nixpkgs-channels/20.09;
+    unstable.url = github:NixOS/nixpkgs-channels/nixos-unstable;
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "unstable";
     };
   };
 

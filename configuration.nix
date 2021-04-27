@@ -1,37 +1,64 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-#st-luke:
 { config, pkgs, ... }:
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [ 
       ./hardware-configuration.nix
       ./graphical
+      ./felix.nix
     ];
 
-  # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;
   boot.loader.grub.version = 2;
+  boot.loader.grub.device = "/dev/sda";
+  networking.useDHCP = false;
+  networking.interfaces.ens33.useDHCP = true;
+
+  nix = {
+    package = pkgs.nixUnstable;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+  };
+
+  environment.systemPackages = with pkgs; [
+    wget vim
+    brave    
+    git neovim
+    alacritty
+    dmenu
+    gnumake
+  ];
+
+  nixpkgs.overlays = [ ];
+
+  fonts.fonts = with pkgs; [
+    terminus_font
+  ];
+
+  system.stateVersion = "20.09";
+
+
+
+
+
+
+
+
+
+
+
+
   # boot.loader.grub.efiSupport = true;
   # boot.loader.grub.efiInstallAsRemovable = true;
   # boot.loader.efi.efiSysMountPoint = "/boot/efi";
   # Define on which hard drive you want to install Grub.
-  boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
 
   # networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Set your time zone.
   # time.timeZone = "Europe/Amsterdam";
-
-  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
-  # Per-interface useDHCP will be mandatory in the future, so this generated config
-  # replicates the default behaviour.
-  networking.useDHCP = false;
-  networking.interfaces.ens33.useDHCP = true;
-
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -42,23 +69,6 @@
   #   font = "Lat2-Terminus16";
   #   keyMap = "us";
   # };
-
-  # Enable the X11 windowing system.
-#  services.xserver = {
-#    enable = true;
-#    displayManager = {
-#      startx.enable = true;
-#      defaultSession = "none+xmonad";
-#    };
-#    windowManager.xmonad = {
-#      enable = true;
-#      enableContribAndExtras = true;
-#    };
-#  };
-
-
-
-  
 
   # Configure keymap in X11
   # services.xserver.layout = "us";
@@ -74,56 +84,9 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  nix = {
-    package = pkgs.nixUnstable;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
-  };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.felix = {
-    password = "n";
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-  };
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    wget vim
-    brave    
-    git neovim
-    alacritty
-    dmenu
-    #st
-   # (st.overrideAttrs (oldAttrs: rec {
-   #   src = st-luke;
-   #   #src = fetchFromGitHub {
-   #   #  owner = "LukeSmithxyz";
-   #   #  repo = "st";
-   #   #  rev = "8ab3d03681479263a11b05f7f1b53157f61e8c3b";
-   #   #  sha256 = "1brwnyi1hr56840cdx0qw2y19hpr0haw4la9n0rqdn0r2chl8vag";
-   #   #};
-   #   buildInputs = oldAttrs.buildInputs ++ [ 
-   #     fontconfig freetype xorg.libX11 xorg.libX11.dev xorg.libXft xorg.libXrender 
-   #     harfbuzz 
-   #   ];
-   # }))
-  ];
-
-  nixpkgs.overlays = [ ];
-
-  fonts.fonts = with pkgs; [
-    terminus_font
-  ];
 
 
-#  home-manager.users.felix = {
-#    programs.zsh = {
-#      enable = true;
-#    };
-#  };
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -149,7 +112,6 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "20.09"; # Did you read the comment?
 
 }
 
