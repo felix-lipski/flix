@@ -7,10 +7,7 @@
       startx.enable = true;
       defaultSession = "none+xmonad";
     };
-    windowManager.xmonad = {
-      enable = true;
-      enableContribAndExtras = true;
-    };
+    xkbOptions = "caps:super";
   };
 
   # Configure keymap in X11

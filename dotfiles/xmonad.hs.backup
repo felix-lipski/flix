@@ -1,0 +1,13 @@
+import XMonad
+
+main = xmonad defaultConfig
+    { terminal = myTerminal
+    , borderWidth = myBorderWidth
+    , modMask = myModMask
+    }
+
+myTerminal = "alacritty"
+myBorderWidth = 2
+myModMask = mod4Mask
+myNormalBorderColor = "#000000"
+myFocusedBorderColor = "#ffffff"

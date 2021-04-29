@@ -4,7 +4,7 @@
   imports =
     [ 
       ./hardware-configuration.nix
-      ./graphical
+      ./graphical.nix
       ./felix.nix
     ];
 
@@ -22,12 +22,12 @@
   };
 
   environment.systemPackages = with pkgs; [
-    wget vim
-    brave    
-    git neovim
-    alacritty
+    wget
+    vim
+    git 
     dmenu
     gnumake
+    gcc
   ];
 
   nixpkgs.overlays = [ ];

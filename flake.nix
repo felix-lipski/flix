@@ -6,18 +6,25 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "unstable";
     };
+    neovim-nightly-overlay.url = github:nix-community/neovim-nightly-overlay;
   };
 
-  outputs = { nixpkgs, nix, self, ... }@inputs: {
-    nixosConfigurations.flix = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [ 
-        (import ./configuration.nix)
-        inputs.home-manager.nixosModules.home-manager
+  outputs = { nixpkgs, nix, self, ... }@inputs: 
+    let
+      overlays = [
+        inputs.neovim-nightly-overlay.overlay
       ];
-      specialArgs = { inherit inputs; };
-    };
-
+    in {
+      nixosConfigurations.flix = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [ 
+	  { nixpkgs.overlays = overlays; }
+          (import ./configuration.nix)
+          inputs.home-manager.nixosModules.home-manager
+        ];
+        specialArgs = { inherit inputs; };
+      };
+  
     flix = self.nixosConfigurations.flix.config.system.build.toplevel;
   };
 }
