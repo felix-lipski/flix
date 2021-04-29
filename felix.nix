@@ -10,20 +10,20 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     users = {
-      felix = {
-        services.xcape = {
-	  enable = true;
-	  mapExpression = {
-	    Shift_L = "Escape";
-	  };
-	};
+      felix = 
+        let
+          palette = (import ./colors.nix);
+        in {
         home.file.".xinitrc".text = "exec xmonad";
         xsession = {
 	  enable = true;
 	  windowManager.xmonad = {
 	    enable = true;
 	    enableContribAndExtras = true;
-	    config = ./dotfiles/xmonad.hs;
+            config = pkgs.writeText "xmonad.hs" 
+              (palette.interpolateColors
+                (builtins.readFile ./xmonad.hs)
+              );
 	  };
 	};
 	home.packages = with pkgs; [
@@ -40,17 +40,14 @@
                 italic.family = "Terminus";
               };
               cursor.style = "Beam";
-              colors =
-                let
-                  palette = (import ./palette.nix).palette;
-                in {
-                primary = with palette; {
+              colors = {
+                primary = with palette.named; {
                   background = black;
                   foreground = white;
                 };
-                normal = palette;
-                bright = palette;
-                dim    = palette;
+                normal = palette.named;
+                bright = palette.named;
+                dim    = palette.named;
               };
             };
           };
@@ -66,9 +63,9 @@
 	      g = "git";
             };
             localVariables = {
-              PROMPT = "%F{blue}%n%f %F{yellow}%~%f ";
+              PROMPT = "%F{blue}%n%f %F{green}%~%f ";
             };
-            initExtra = "${ lib.fileContents ./dotfiles/zshrc }";
+            initExtra = lib.fileContents ./zshrc;
           };
           neovim = {
             enable = true;
@@ -78,17 +75,7 @@
 	      vim-css-color
 	      vim-nix
             ];
-	    extraConfig = ''
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "nix" },
-  highlight = {
-    enable = { "nix" },
-    disable = {},
-  },
-}
-EOF
-	    '';
+            extraConfig = lib.fileContents ./init.vim;
           };
           git = {
             enable = true;

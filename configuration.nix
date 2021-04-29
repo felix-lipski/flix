@@ -4,7 +4,6 @@
   imports =
     [ 
       ./hardware-configuration.nix
-      ./graphical.nix
       ./felix.nix
     ];
 
@@ -19,6 +18,15 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+  };
+
+  services.xserver = {
+    enable = true;
+    displayManager = {
+      startx.enable = true;
+      defaultSession = "none+xmonad";
+    };
+    xkbOptions = "caps:super";
   };
 
   environment.systemPackages = with pkgs; [

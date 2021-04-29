@@ -8,8 +8,8 @@ import qualified Data.Map        as M
 myTerminal      = "alacritty"
 myModMask       = mod4Mask
 myBorderWidth   = 1
-myNormalBorderColor  = "#000000"
-myFocusedBorderColor = "#008080"
+myNormalBorderColor  = "#black"
+myFocusedBorderColor = "#cyan"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -34,12 +34,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch a terminal
     [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
     -- launch dmenu
-    , ((modm,               xK_p     ), spawn "dmenu_run")
+    , ((modm,               xK_d     ), spawn "dmenu_run")
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
     -- close focused window
     , ((modm,               xK_q     ), kill)
-     -- Rotate through the available layout algorithms
+    -- Rotate through the available layout algorithms
     , ((modm,               xK_space ), sendMessage NextLayout)
     --  Reset the layouts on the current workspace to default
     , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
