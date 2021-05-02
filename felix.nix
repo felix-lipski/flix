@@ -12,22 +12,28 @@
     users = {
       felix = 
         let
-          palette = (import ./colors.nix);
+          palette = ((import ./spacelix.nix) {inherit lib;}).spacelix-ocean;
+          font = "Terminus";
+          utils = (import ./utils.nix) {lib=lib;};
         in {
-        home.file.".xinitrc".text = "exec xmonad";
+          home.file.".xinitrc".text = ''
+${pkgs.xcape}/bin/xcape -e 'Super_L=Escape'
+exec xmonad
+'';
         xsession = {
 	  enable = true;
 	  windowManager.xmonad = {
 	    enable = true;
 	    enableContribAndExtras = true;
             config = pkgs.writeText "xmonad.hs" 
-              (palette.interpolateColors
+              (utils.interpolateColors palette.dark
                 (builtins.readFile ./xmonad.hs)
               );
 	  };
 	};
 	home.packages = with pkgs; [
 	  brave
+          lf
 	];
         programs = {
           alacritty = {
@@ -35,19 +41,19 @@
             settings = {
               shell.program = "zsh";
               font = {
-                normal.family = "Terminus";
-                bold.family = "Terminus";
-                italic.family = "Terminus";
+                normal.family = font;
+                bold.family   = font;
+                italic.family = font;
               };
               cursor.style = "Beam";
               colors = {
-                primary = with palette.named; {
+                primary = with palette.dark; {
                   background = black;
                   foreground = white;
                 };
-                normal = palette.named;
-                bright = palette.named;
-                dim    = palette.named;
+                normal = palette.dark;
+                bright = palette.light; # // {black = (utils.lightenHex palette.named.black);};
+                dim    = palette.dark;
               };
             };
           };
@@ -55,12 +61,12 @@
             enable = true;
             dotDir = ".config/zsh";
             shellAliases = {
-	      ls = "ls --color";
-              l = "ls -la";
-              v = "nvim";
-	      m = "make";
-	      c = "cd";
-	      g = "git";
+	      ls  = "ls --color";
+              l   = "ls -la";
+              v   = "nvim";
+	      m   = "make";
+	      c   = "cd";
+	      g   = "git";
             };
             localVariables = {
               PROMPT = "%F{blue}%n%f %F{green}%~%f ";

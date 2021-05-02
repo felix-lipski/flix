@@ -1,6 +1,9 @@
+{ lib }:
 rec {
+  utils = (import ./utils.nix) {inherit lib;};
+
   spacelix-base = {
-    red     = "#cc0000"; 
+    red     = "#cc2200"; 
     green   = "#77aa00"; 
     yellow  = "#ccbb00"; 
     blue    = "#0066ff"; 
@@ -9,11 +12,17 @@ rec {
     white   = "#ffffff"; 
   };
 
-  altred = "#dc322f";
+# spacelix-base-dark = builtins.mapAttrs (name: value: utils.darkenHex 0.1 value) spacelix-base;
+# spacelix-base-light = builtins.mapAttrs (name: value: utils.lightenHex 0.5 value) spacelix-base;
 
-  spacelix-slate  = spacelix-base // { black = "#1b253a"; };
-  spacelix-dark   = spacelix-base // { black = "#111111"; };
-  spacelix-black  = spacelix-base // { black = "#000000"; };
-  spacelix-ocean  = spacelix-base // { black = "#012456"; red = altred; };
-  spacelix-sea    = spacelix-base // { black = "#073642"; red = altred; };
+  genSpacelix = background: {
+    light = spacelix-base // {black = utils.lightenHex 0.4 background;};
+    dark = spacelix-base // {black = background;};
+  };
+
+  spacelix-slate  = genSpacelix "#1b253a";
+  spacelix-dark   = genSpacelix "#111111";
+  spacelix-black  = genSpacelix "#000000";
+  spacelix-ocean  = genSpacelix "#012456";
+  spacelix-sea    = genSpacelix "#073642";
 }
