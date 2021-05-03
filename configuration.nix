@@ -28,17 +28,18 @@
     };
     xkbOptions = "caps:super";
   };
-  systemd.services."xcape" = {
-    enable = true;
-    description = "xcape";
-    wantedBy = [ "default.target" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.xcape}/bin/xcape -e 'Super_L=Escape'";
-      Type = "forking";
-      Restart = "always";
-      RestartSec = 2;
-    };
-  };
+
+# systemd.services."xcape" = {
+#   enable = true;
+#   description = "xcape";
+#   wantedBy = [ "default.target" ];
+#   serviceConfig = {
+#     ExecStart = "${pkgs.xcape}/bin/xcape -e 'Super_L=Escape'";
+#     Type = "forking";
+#     Restart = "always";
+#     RestartSec = 2;
+#   };
+# };
 
   environment.systemPackages = with pkgs; [
     wget

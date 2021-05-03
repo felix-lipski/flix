@@ -12,14 +12,11 @@
     users = {
       felix = 
         let
-          palette = ((import ./spacelix.nix) {inherit lib;}).spacelix-ocean;
+          palette = ((import ./spacelix.nix) {inherit lib;}).spacelix-deep;
           font = "Terminus";
           utils = (import ./utils.nix) {lib=lib;};
         in {
-          home.file.".xinitrc".text = ''
-${pkgs.xcape}/bin/xcape -e 'Super_L=Escape'
-exec xmonad
-'';
+        home.file.".xinitrc".text = "exec xmonad";
         xsession = {
 	  enable = true;
 	  windowManager.xmonad = {
@@ -31,7 +28,10 @@ exec xmonad
               );
 	  };
 	};
+        services.lorri.enable = true;
 	home.packages = with pkgs; [
+          direnv
+          xcape
 	  brave
           lf
 	];
@@ -67,6 +67,7 @@ exec xmonad
 	      m   = "make";
 	      c   = "cd";
 	      g   = "git";
+              xc  = "xcape -e 'Super_L=Escape'";
             };
             localVariables = {
               PROMPT = "%F{blue}%n%f %F{green}%~%f ";
@@ -80,6 +81,7 @@ exec xmonad
 	      nvim-treesitter
 	      vim-css-color
 	      vim-nix
+              goyo-vim
             ];
             extraConfig = lib.fileContents ./init.vim;
           };

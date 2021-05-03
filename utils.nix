@@ -12,11 +12,12 @@ rec {
   floatToInt = x: lib.strings.toInt (builtins.elemAt (builtins.split "[.]" (builtins.toString x)) 0);
 
   # justr "foo" 5 "a" -> "aafoo"
-  justr = leng: char: str:
-    (lib.lists.foldr (a: b: a + b) "" (builtins.genList (x: char) (leng - builtins.stringLength str)) + str);
+  justr = (leng: char: str:
+    (lib.lists.foldr (a: b: a + b) "" (builtins.genList (x: char) (leng - builtins.stringLength str)) + str)
+  );
 
   # hexToInt "c5" -> 197
-  hexToInt = str: 
+  hexToInt = (str: 
     let
       hexMap = builtins.listToAttrs (map (x: {name = builtins.toString x; value = x;}) (lib.lists.range 0 9)) // {
         "a"=10;"b"=11;"c"=12;"d"=13;"e"=14;"f"=15;};
@@ -26,20 +27,24 @@ rec {
       (ind: (pow 16 ind) * 
         hexMap."${ builtins.elemAt list ind }")
       (builtins.length list)
-    );
+    )
+  );
 
   # hexStrToRGB "#1234ff" -> [ 18 52 255 ]
-  hexStrToRGB = str:
+  hexStrToRGB = (str:
     let
       at = builtins.elemAt (lib.lists.reverseList (lib.strings.stringToCharacters str));
     in
-    map hexToInt [(at 5 + at 4) (at 3 + at 2) (at 1 + at 0)];
+    map hexToInt [(at 5 + at 4) (at 3 + at 2) (at 1 + at 0)]
+  );
 
   # RGBToHexStr [ 18 52 255 ] -> "#1234ff"
-  RGBToHexStr = rgb:
-    "#" + lib.lists.foldr (a: b: a + b) "" (map (compose (justr 2 "0") lib.trivial.toHexString) rgb);
+  RGBToHexStr = (rgb:
+    "#" + lib.lists.foldr (a: b: a + b) "" (map (compose (justr 2 "0") lib.trivial.toHexString) rgb)
+  );
 
-  lightenRGB = coeff: rgb:
+  # lightenRGB 0.5 [0 0 0] -> [127 127 127]
+  lightenRGB = (coeff: rgb:
     let
       rgb' = map (x: x + 1) rgb;
       max = lib.lists.foldr (a: b: if a > b then a else b) 0 rgb';
@@ -47,17 +52,15 @@ rec {
       addToMax = coeff * remain;
       ratio = addToMax / max;
     in
-    map (x: -1 + floatToInt (x * (1.0 + ratio))) rgb';
+    map (x: -1 + floatToInt (x * (1.0 + ratio))) rgb'
+  );
   
+  # darkenRGB 0.5 [50 40 30] -> [25 20 15]
   darkenRGB = (coeff: rgb:
     let
       rgb' = map (x: x + 1) rgb;
-      min = lib.lists.foldr (a: b: if a < b then a else b) 256 rgb';
-    # remain = 256 - min;
-      subFromMin = coeff * min;
-      ratio = subFromMin / min;
     in
-    map (x: floatToInt (x * (1.0 - ratio))) rgb'
+    map (x: floatToInt (x * (1.0 - coeff))) rgb'
   );
 
   hexMap = (func: hex:
@@ -68,6 +71,7 @@ rec {
 
   darkenHex = coeff: hexMap (darkenRGB coeff);
   
+  # replaces the "#x" in string with the vallue of the x attribute of the palette
   interpolateColors = (palette: builtins.replaceStrings 
     (map (x: "#" + x) (builtins.attrNames palette))
     (builtins.attrValues palette)

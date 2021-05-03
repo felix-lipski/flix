@@ -25,4 +25,5 @@ rec {
   spacelix-black  = genSpacelix "#000000";
   spacelix-ocean  = genSpacelix "#012456";
   spacelix-sea    = genSpacelix "#073642";
+  spacelix-deep   = genSpacelix "#001133";
 }
