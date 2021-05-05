@@ -28,18 +28,9 @@
     };
     xkbOptions = "caps:super";
   };
-
-# systemd.services."xcape" = {
-#   enable = true;
-#   description = "xcape";
-#   wantedBy = [ "default.target" ];
-#   serviceConfig = {
-#     ExecStart = "${pkgs.xcape}/bin/xcape -e 'Super_L=Escape'";
-#     Type = "forking";
-#     Restart = "always";
-#     RestartSec = 2;
-#   };
-# };
+  
+  sound.enable = true;
+  hardware.pulseaudio.enable = true;
 
   environment.systemPackages = with pkgs; [
     wget
@@ -98,9 +89,7 @@
   # services.printing.enable = true;
 
   # Enable sound.
-  # sound.enable = true;
-  # hardware.pulseaudio.enable = true;
-
+  
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 

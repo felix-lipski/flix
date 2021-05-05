@@ -7,6 +7,7 @@
       inputs.nixpkgs.follows = "unstable";
     };
     neovim-nightly-overlay.url = github:nix-community/neovim-nightly-overlay;
+    spacelix.url = github:felix-lipski/spacelix;
   };
 
   outputs = { nixpkgs, nix, self, ... }@inputs: 
@@ -21,6 +22,8 @@
 	  { nixpkgs.overlays = overlays; }
           (import ./configuration.nix)
           inputs.home-manager.nixosModules.home-manager
+          inputs.spacelix.spacelix-module
+        # (import /home/felix/code/spacelix/spacelix-module.nix)
         ];
         specialArgs = { inherit inputs; };
       };

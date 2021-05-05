@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, config, ... }:
 {
   users.users.felix = {
     password = "n";
@@ -12,7 +12,8 @@
     users = {
       felix = 
         let
-          palette = ((import ./spacelix.nix) {inherit lib;}).spacelix-deep;
+        # palette = ((import /home/felix/code/spacelix/spacelix.nix) {inherit lib;}).deep;
+          palette = config.ui.spacelix.abyss;
           font = "Terminus";
           utils = (import ./utils.nix) {lib=lib;};
         in {
@@ -52,7 +53,7 @@
                   foreground = white;
                 };
                 normal = palette.dark;
-                bright = palette.light; # // {black = (utils.lightenHex palette.named.black);};
+                bright = palette.light;
                 dim    = palette.dark;
               };
             };
@@ -71,6 +72,7 @@
             };
             localVariables = {
               PROMPT = "%F{blue}%n%f %F{green}%~%f ";
+              EDITOR = "nvim";
             };
             initExtra = lib.fileContents ./zshrc;
           };
