@@ -45,6 +45,9 @@
 
   fonts.fonts = with pkgs; [
     terminus_font
+    fira-code
+    _3270font
+    mno16
   ];
 
   system.stateVersion = "20.09";

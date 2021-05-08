@@ -9,7 +9,7 @@ myTerminal      = "alacritty"
 myModMask       = mod4Mask
 myBorderWidth   = 1
 myNormalBorderColor  = "#black"
-myFocusedBorderColor = "#cyan"
+myFocusedBorderColor = "#green"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool

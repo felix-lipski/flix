@@ -29,5 +29,6 @@
       };
   
     flix = self.nixosConfigurations.flix.config.system.build.toplevel;
+  # vmiso = self.nixosConfigurations.flix.config.system.build.isoImage;
   };
 }

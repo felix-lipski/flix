@@ -13,7 +13,7 @@
       felix = 
         let
         # palette = ((import /home/felix/code/spacelix/spacelix.nix) {inherit lib;}).deep;
-          palette = config.ui.spacelix.abyss;
+          palette = config.ui.spacelix.deep;
           font = "Terminus";
           utils = (import ./utils.nix) {lib=lib;};
         in {
@@ -35,6 +35,11 @@
           xcape
 	  brave
           lf
+          yarn
+          # haskell
+          cabal2nix
+          cabal-install
+        # haskellPackages.Agda
 	];
         programs = {
           alacritty = {
@@ -84,6 +89,7 @@
 	      vim-css-color
 	      vim-nix
               goyo-vim
+              agda-vim
             ];
             extraConfig = lib.fileContents ./init.vim;
           };
