@@ -1,6 +1,6 @@
 switch:
-	sudo nixos-rebuild switch --impure --flake "./#flix"
+	sudo nixos-rebuild switch --impure --flake "./#vm"
 pure:
-	sudo nixos-rebuild switch --flake "./#flix"
+	sudo nixos-rebuild switch --flake "./#vm"
 trace:
-	sudo nixos-rebuild switch --impure --flake "./#flix" --show-trace
+	sudo nixos-rebuild switch --impure --flake "./#vm" --show-trace

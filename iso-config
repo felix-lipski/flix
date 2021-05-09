@@ -1,56 +1,60 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ 
-      ./hardware-configuration.nix
-      ./felix.nix
-    ];
+  networking.hostName = "iso"; # Define your hostname.
+  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.device = "/dev/sda";
-  networking.useDHCP = false;
-  networking.interfaces.ens33.useDHCP = true;
 
-  nix = {
-    package = pkgs.nixUnstable;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
-  };
+# imports =
+#   [ 
+#   # ./hardware-configuration.nix
+#     ./felix.nix
+#   ];
 
-  services.xserver = {
-    enable = true;
-    displayManager = {
-      startx.enable = true;
-      defaultSession = "none+xmonad";
-    };
-    xkbOptions = "caps:super";
-  };
-  
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
+# boot.loader.grub.enable = true;
+# boot.loader.grub.version = 2;
+# boot.loader.grub.device = "/dev/sda";
+# networking.useDHCP = false;
+# networking.interfaces.ens33.useDHCP = true;
 
-  environment.systemPackages = with pkgs; [
-    wget
-    vim
-    git 
-    dmenu
-    gnumake
-    gcc
-  ];
+# nix = {
+#   package = pkgs.nixUnstable;
+#   extraOptions = ''
+#     experimental-features = nix-command flakes
+#   '';
+# };
 
-  nixpkgs.overlays = [ ];
+# services.xserver = {
+#   enable = true;
+#   displayManager = {
+#     startx.enable = true;
+#     defaultSession = "none+xmonad";
+#   };
+#   xkbOptions = "caps:super";
+# };
+# 
+# sound.enable = true;
+# hardware.pulseaudio.enable = true;
 
-  fonts.fonts = with pkgs; [
-    terminus_font
-    fira-code
-    _3270font
-    mno16
-  ];
+# environment.systemPackages = with pkgs; [
+#   wget
+#   vim
+#   git 
+#   dmenu
+#   gnumake
+#   gcc
+# ];
 
-  system.stateVersion = "20.09";
+# nixpkgs.overlays = [ ];
+
+# fonts.fonts = with pkgs; [
+#   terminus_font
+#   fira-code
+#   _3270font
+#   mno16
+# ];
+
+# system.stateVersion = "20.09";
 
 
 
@@ -68,8 +72,8 @@
   # boot.loader.efi.efiSysMountPoint = "/boot/efi";
   # Define on which hard drive you want to install Grub.
 
-  # networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+# networking.hostName = "vm"; # Define your hostname.
+# networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Set your time zone.
   # time.timeZone = "Europe/Amsterdam";
