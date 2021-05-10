@@ -42,10 +42,19 @@
           ];
           specialArgs = { inherit inputs; };
         };
+        tp = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = base.modules ++ [ 
+            (import ./tp-config.nix)
+            (import ./tp-hardware.nix)
+          ];
+          specialArgs = { inherit inputs; };
+        };
         
       };
   
     vm = self.nixosConfigurations.vm.config.system.build.toplevel;
+    tp = self.nixosConfigurations.tp.config.system.build.toplevel;
     iso = self.nixosConfigurations.iso.config.system.build.isoImage;
   };
 }

@@ -1,78 +1,39 @@
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
+
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ 
-    # ./hardware-configuration.nix
-      ./felix.nix
-    ];
+# imports =
+#   [ # Include the results of the hardware scan.
+#     ./tp-hardware.nix
+#   ];
 
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.device = "/dev/sda";
-  networking.useDHCP = false;
-  networking.interfaces.ens33.useDHCP = true;
+  # Use the systemd-boot EFI boot loader.
+# boot.loader.systemd-boot.enable = true;
+# boot.loader.efi.canTouchEfiVariables = true;
 
-  nix = {
-    package = pkgs.nixUnstable;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
-  };
+# boot.loader.grub = {
+#   enable = true;
+#   version = 2;
+#   device = "/dev/sda";
+# };
 
-  services.xserver = {
-    enable = true;
-    displayManager = {
-      startx.enable = true;
-      defaultSession = "none+xmonad";
-    };
-    xkbOptions = "caps:super";
-  };
-  
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    wget
-    vim
-    git 
-    dmenu
-    gnumake
-    gcc
-  ];
-
-  nixpkgs.overlays = [ ];
-
-  fonts.fonts = with pkgs; [
-    terminus_font
-    fira-code
-    _3270font
-    mno16
-  ];
-
-  system.stateVersion = "20.09";
-
-
-
-
-
-
-
-
-
-
-
-
-  # boot.loader.grub.efiSupport = true;
-  # boot.loader.grub.efiInstallAsRemovable = true;
-  # boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  # Define on which hard drive you want to install Grub.
-
-# networking.hostName = "vm"; # Define your hostname.
+  networking.hostName = "tp"; # Define your hostname.
 # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Set your time zone.
   # time.timeZone = "Europe/Amsterdam";
+
+  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
+  # Per-interface useDHCP will be mandatory in the future, so this generated config
+  # replicates the default behaviour.
+  networking.useDHCP = false;
+  networking.interfaces.enp0s25.useDHCP = true;
+  networking.interfaces.wlp3s0.useDHCP = true;
+  networking.interfaces.wwp0s29u1u4.useDHCP = true;
+
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -84,6 +45,12 @@
   #   keyMap = "us";
   # };
 
+  # Enable the X11 windowing system.
+  # services.xserver.enable = true;
+
+
+  
+
   # Configure keymap in X11
   # services.xserver.layout = "us";
   # services.xserver.xkbOptions = "eurosign:e";
@@ -92,12 +59,27 @@
   # services.printing.enable = true;
 
   # Enable sound.
-  
+  # sound.enable = true;
+  # hardware.pulseaudio.enable = true;
+
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+# users.users.felix = {
+#   password = "n";
+#   isNormalUser = true;
+#   extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+# };
 
-
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
+# environment.systemPackages = with pkgs; [
+#   wget 
+#   vim
+#   git
+#   firefox
+# ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -124,6 +106,7 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+# system.stateVersion = "20.09"; # Did you read the comment?
 
 }
 

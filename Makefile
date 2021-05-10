@@ -1,3 +1,5 @@
+tp:
+	sudo nixos-rebuild switch --impure --flake "./#tp"
 switch:
 	sudo nixos-rebuild switch --impure --flake "./#vm"
 pure:
