@@ -13,7 +13,7 @@
       felix = 
         let
         # palette = ((import /home/felix/code/spacelix/spacelix.nix) {inherit lib;}).deep;
-          palette = config.ui.spacelix.deep;
+          palette = config.ui.spacelix.abyss;
           font = "Terminus";
           utils = (import ./utils.nix) {lib=lib;};
         in {

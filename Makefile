@@ -1,3 +1,5 @@
+host:
+	sudo nixos-rebuild switch --impure --flake .
 tp:
 	sudo nixos-rebuild switch --impure --flake "./#tp"
 switch:
