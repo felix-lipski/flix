@@ -1,4 +1,4 @@
-switch = sudo nixso-rebuild switch
+switch = sudo nixos-rebuild switch
 
 normal:
 	$(switch) --impure --flake .
