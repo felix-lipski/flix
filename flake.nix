@@ -1,6 +1,6 @@
 {
   inputs = {
-    #stable.url = github:NixOS/nixpkgs-channels/20.09;
+  # stable.url = github:NixOS/nixpkgs-channels/20.09;
     unstable.url = github:NixOS/nixpkgs-channels/nixos-unstable;
     nixos.url = github:nixos/nixpkgs/nixos-unstable;
     home-manager = {
@@ -29,32 +29,20 @@
         vm = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = base.modules ++ [ 
-            (import ./vm-config.nix)
-            (import ./vm-hardware.nix)
-          ];
-          specialArgs = { inherit inputs; };
-        };
-        iso = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = base.modules ++ [ 
-            (import ./iso-config.nix)
-            "${nixos}/nixos/modules/nistaller/cd-dvd/installation=cd-minimal.nix"
+            (import ./hosts/vm-config.nix)
           ];
           specialArgs = { inherit inputs; };
         };
         tp = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = base.modules ++ [ 
-            (import ./tp-config.nix)
-            (import ./tp-hardware.nix)
+            (import ./hosts/tp-config.nix)
           ];
           specialArgs = { inherit inputs; };
         };
-        
       };
   
     vm = self.nixosConfigurations.vm.config.system.build.toplevel;
     tp = self.nixosConfigurations.tp.config.system.build.toplevel;
-    iso = self.nixosConfigurations.iso.config.system.build.isoImage;
   };
 }

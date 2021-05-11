@@ -1,10 +1,16 @@
-host:
-	sudo nixos-rebuild switch --impure --flake .
-tp:
-	sudo nixos-rebuild switch --impure --flake "./#tp"
-switch:
-	sudo nixos-rebuild switch --impure --flake "./#vm"
+switch = sudo nixso-rebuild switch
+
+normal:
+	$(switch) --impure --flake .
 pure:
-	sudo nixos-rebuild switch --flake "./#vm"
+	$(switch) --flake .
 trace:
-	sudo nixos-rebuild switch --impure --flake "./#vm" --show-trace
+	$(switch) --impure --flake . --show-trace
+
+
+sswitch:
+	sudo nixos-rebuild switch --impure --flake .
+ppure:
+	sudo nixos-rebuild switch --flake .
+ttrace:
+	sudo nixos-rebuild switch --impure --flake . --show-trace

@@ -13,7 +13,7 @@
       felix = 
         let
         # palette = ((import /home/felix/code/spacelix/spacelix.nix) {inherit lib;}).deep;
-          palette = config.ui.spacelix.abyss;
+          palette = config.ui.spacelix.black;
           font = "Terminus";
           utils = (import ./utils.nix) {lib=lib;};
         in {
@@ -24,13 +24,16 @@
 	    enable = true;
 	    enableContribAndExtras = true;
             config = pkgs.writeText "xmonad.hs" 
-              (utils.interpolateColors palette.dark
-                (builtins.readFile ./xmonad.hs)
+              (utils.interpolateColors (palette.dark // {grey = palette.light.black;})
+                (builtins.readFile ./dotfiles/xmonad.hs)
               );
 	  };
 	};
         services.lorri.enable = true;
 	home.packages = with pkgs; [
+          gnumake
+          gcc
+          dmenu
           direnv
           xcape
 	  brave
@@ -79,7 +82,7 @@
               PROMPT = "%F{blue}%n%f %F{green}%~%f ";
               EDITOR = "nvim";
             };
-            initExtra = lib.fileContents ./zshrc;
+            initExtra = lib.fileContents ./dotfiles/zshrc;
           };
           neovim = {
             enable = true;
@@ -91,7 +94,7 @@
               goyo-vim
               agda-vim
             ];
-            extraConfig = lib.fileContents ./init.vim;
+            extraConfig = lib.fileContents ./dotfiles/init.vim;
           };
           git = {
             enable = true;
