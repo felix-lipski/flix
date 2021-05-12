@@ -24,7 +24,7 @@
 	    enable = true;
 	    enableContribAndExtras = true;
             config = pkgs.writeText "xmonad.hs" 
-              (utils.interpolateColors (palette.dark // {grey = palette.light.black;})
+              (utils.interpolateColors palette.withGrey
                 (builtins.readFile ./dotfiles/xmonad.hs)
               );
 	  };
