@@ -1,5 +1,14 @@
 { lib, pkgs, config, ... }:
+let
+  palette = config.ui.spacelix.abyss;
+  font = "Terminus";
+  utils = (import ./utils.nix) {lib=lib;};
+in
 {
+  console.colors = map (lib.strings.removePrefix "#") (with palette.withGrey; [
+    black red green yellow blue magenta cyan white
+    grey red green yellow blue magenta cyan white
+  ]);
   users.users.felix = {
     password = "n";
     isNormalUser = true;
@@ -10,13 +19,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     users = {
-      felix = 
-        let
-        # palette = ((import /home/felix/code/spacelix/spacelix.nix) {inherit lib;}).deep;
-          palette = config.ui.spacelix.black;
-          font = "Terminus";
-          utils = (import ./utils.nix) {lib=lib;};
-        in {
+      felix = {
         home.file.".xinitrc".text = "exec xmonad";
         xsession = {
 	  enable = true;
@@ -31,17 +34,12 @@
 	};
         services.lorri.enable = true;
 	home.packages = with pkgs; [
-          gnumake
-          gcc
-          dmenu
-          direnv
+	  brave qutebrowser zathura
+          gnumake gcc direnv
+          dmenu lf
           xcape
-	  brave
-          lf
           yarn
-          # haskell
-          cabal2nix
-          cabal-install
+          cabal2nix cabal-install
         # haskellPackages.Agda
 	];
         programs = {
@@ -81,6 +79,7 @@
             localVariables = {
               PROMPT = "%F{blue}%n%f %F{green}%~%f ";
               EDITOR = "nvim";
+              F = "https://github.com/felix-lipski/";
             };
             initExtra = lib.fileContents ./dotfiles/zshrc;
           };
