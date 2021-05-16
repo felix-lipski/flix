@@ -1,8 +1,8 @@
 color pablo
 lua <<EOF
 langs = { 
-  "nix", "bash", "json", "yaml", 
-  "c", "cpp", "ocaml", "haskell", 
+  "nix", "bash", "json", "yaml", "toml",
+  "c", "cpp", "ocaml", "haskell", "rust",
   "typescript", "javascript", "tsx", "python", 
   "html", "css", "scss", "latex"
 }

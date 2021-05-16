@@ -35,12 +35,11 @@ in
         services.lorri.enable = true;
 	home.packages = with pkgs; [
 	  brave qutebrowser zathura
-          gnumake gcc direnv
-          dmenu lf
+          gnumake gcc cmake direnv tmux
+          dmenu lf sxiv
           xcape
           yarn
           cabal2nix cabal-install
-        # haskellPackages.Agda
 	];
         programs = {
           alacritty = {
