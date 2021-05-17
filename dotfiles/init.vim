@@ -1,3 +1,4 @@
+nnoremap <F4> :w \| make <CR>
 color pablo
 lua <<EOF
 langs = { 

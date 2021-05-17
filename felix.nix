@@ -1,6 +1,6 @@
 { lib, pkgs, config, ... }:
 let
-  palette = config.ui.spacelix.abyss;
+  palette = config.ui.spacelix.black;
   font = "Terminus";
   utils = (import ./utils.nix) {lib=lib;};
 in
