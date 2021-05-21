@@ -1,6 +1,9 @@
-{ lib, pkgs, config, ... }:
+{ lib, pkgs, config, 
+#nix-doom-emacs, 
+inputs,
+... }:
 let
-  palette = config.ui.spacelix.black;
+  palette = config.ui.spacelix.ocean;
   font = "Terminus";
   utils = (import ./utils.nix) {lib=lib;};
 in
@@ -20,6 +23,7 @@ in
     useUserPackages = true;
     users = {
       felix = {
+        imports = [ inputs.nix-doom-emacs.hmModule ];
         home.file.".xinitrc".text = "exec xmonad";
         xsession = {
 	  enable = true;
@@ -67,13 +71,17 @@ in
             enable = true;
             dotDir = ".config/zsh";
             shellAliases = {
-	      ls  = "ls --color";
-              l   = "ls -la";
-              v   = "nvim";
-	      m   = "make";
-	      c   = "cd";
-	      g   = "git";
-              xc  = "xcape -e 'Super_L=Escape'";
+	      ls      = "ls --color";
+              l       = "ls -la";
+              v       = "nvim";
+	      m       = "make";
+              e       = "make edit";
+	      c       = "cd";
+	      g       = "git";
+              x       = "exit";
+              nsh     = "nix-shell";
+              nunfree = "export NIXPKGS_ALLOW_UNFREE=1";
+              xc      = "xcape -e 'Super_L=Escape'";
             };
             localVariables = {
               PROMPT = "%F{blue}%n%f %F{green}%~%f ";
@@ -98,6 +106,10 @@ in
             enable = true;
             userEmail = "felix.lipski7@gmail.com";
             userName = "felix-lipski";
+          };
+          doom-emacs = {
+            enable = true;
+            doomPrivateDir = ./dotfiles/doom.d;
           };
         };
       };

@@ -1,5 +1,5 @@
-nnoremap <F4> :w \| make <CR>
-color pablo
+nnoremap <F4> :w \| make! <CR>
+color delek
 lua <<EOF
 langs = { 
   "nix", "bash", "json", "yaml", "toml",

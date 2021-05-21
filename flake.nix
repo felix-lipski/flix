@@ -9,11 +9,12 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "unstable";
     };
+    nix-doom-emacs.url = github:vlaci/nix-doom-emacs;
     neovim-nightly-overlay.url = github:nix-community/neovim-nightly-overlay;
     spacelix.url = github:felix-lipski/spacelix;
   };
 
-  outputs = { nixpkgs, nix, self, nixos, ... }@inputs: 
+  outputs = { nixpkgs, nix, self, nixos, nix-doom-emacs, ... }@inputs: 
     {
       nixosConfigurations = let
         overlays = [ inputs.neovim-nightly-overlay.overlay ];

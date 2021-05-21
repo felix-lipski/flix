@@ -19,4 +19,10 @@
       wwp0s29u1u4.useDHCP = true;
     };
   };
+
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+  };
 }

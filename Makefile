@@ -6,3 +6,5 @@ pure:
 	$(switch) --flake .
 trace:
 	$(switch) --impure --flake . --show-trace
+edit:
+	nvim felix.nix
