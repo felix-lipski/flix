@@ -10,6 +10,7 @@
       inputs.nixpkgs.follows = "unstable";
     };
     nix-doom-emacs.url = github:vlaci/nix-doom-emacs;
+    emacs-overlay.url = github:nix-community/emacs-overlay;
     neovim-nightly-overlay.url = github:nix-community/neovim-nightly-overlay;
     spacelix.url = github:felix-lipski/spacelix;
   };
@@ -17,7 +18,7 @@
   outputs = { nixpkgs, nix, self, nixos, nix-doom-emacs, ... }@inputs: 
     {
       nixosConfigurations = let
-        overlays = [ inputs.neovim-nightly-overlay.overlay ];
+        overlays = [ inputs.neovim-nightly-overlay.overlay inputs.emacs-overlay.overlay ];
         base = {
           system = "x86_64-linux";
           modules = [

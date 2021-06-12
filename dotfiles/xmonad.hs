@@ -1,6 +1,7 @@
 import XMonad
 import Data.Monoid
 import System.Exit
+import XMonad.Hooks.DynamicLog
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -200,8 +201,35 @@ myStartupHook = return ()
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
-main = xmonad defaults
+--main = do
+--  xmproc <- spwanPipe "xmobar
 
+--main = xmonad defaults
+--main = xmonad =<< statusBar "xmobar" defaults
+
+
+
+
+
+-- The main function.
+main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
+
+-- Command to launch the bar.
+myBar = "xmobar"
+
+-- Custom PP, configure it as you like. It determines what is being written to the bar.
+myPP = xmobarPP { ppCurrent = xmobarColor "#429942" "" . wrap "<" ">" }
+
+-- Key binding to toggle the gap for the bar.
+toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
+
+
+
+
+
+
+
+--
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will
 -- use the defaults defined in xmonad/XMonad/Config.hs

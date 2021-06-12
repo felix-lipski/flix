@@ -26,12 +26,18 @@
     wget vim git ping
   ];
 
+  virtualisation.docker.enable = true;
+
   fonts = {
     fonts = with pkgs; [
       terminus_font
+      unifont
       fira-code
       _3270font
       mno16
+      fixedsys-excelsior
+      dejavu_fonts
+      mononoki
     ];
   };
 

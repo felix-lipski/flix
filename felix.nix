@@ -1,9 +1,6 @@
-{ lib, pkgs, config, 
-#nix-doom-emacs, 
-inputs,
-... }:
+{ lib, pkgs, config, inputs, ... }:
 let
-  palette = config.ui.spacelix.ocean;
+  palette = config.ui.spacelix.black;
   font = "Terminus";
   utils = (import ./utils.nix) {lib=lib;};
 in
@@ -15,7 +12,7 @@ in
   users.users.felix = {
     password = "n";
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "docker" ];
   };
 
   home-manager = {
@@ -23,8 +20,11 @@ in
     useUserPackages = true;
     users = {
       felix = {
-        imports = [ inputs.nix-doom-emacs.hmModule ];
         home.file.".xinitrc".text = "exec xmonad";
+        home.file.".xmobarrc".text =
+          (utils.interpolateColors palette.withGrey
+            (builtins.readFile ./dotfiles/xmobarrc.hs)
+          );
         xsession = {
 	  enable = true;
 	  windowManager.xmonad = {
@@ -38,12 +38,16 @@ in
 	};
         services.lorri.enable = true;
 	home.packages = with pkgs; [
+          haskellPackages.xmobar
 	  brave qutebrowser zathura
-          gnumake gcc cmake direnv tmux
+          gnumake gcc cmake direnv 
+          tmux ripgrep coreutils
           dmenu lf sxiv
           xcape
           yarn
           cabal2nix cabal-install
+          emacsGcc
+          (agda.withPackages [ agdaPackages.standard-library ])
 	];
         programs = {
           alacritty = {
@@ -51,6 +55,7 @@ in
             settings = {
               shell.program = "zsh";
               font = {
+                size = 9;
                 normal.family = font;
                 bold.family   = font;
                 italic.family = font;
@@ -93,12 +98,23 @@ in
           neovim = {
             enable = true;
             plugins = with pkgs.vimPlugins; [ 
+              # general
               gruvbox 
 	      nvim-treesitter
 	      vim-css-color
-	      vim-nix
               goyo-vim
+              # functional langs
+	      vim-nix
               agda-vim
+              conjure
+              aniseed
+              # soydev langs
+              coc-nvim
+              coc-tsserver
+              coc-eslint
+              coc-tslint
+              coc-snippets
+              coc-prettier
             ];
             extraConfig = lib.fileContents ./dotfiles/init.vim;
           };
@@ -106,10 +122,6 @@ in
             enable = true;
             userEmail = "felix.lipski7@gmail.com";
             userName = "felix-lipski";
-          };
-          doom-emacs = {
-            enable = true;
-            doomPrivateDir = ./dotfiles/doom.d;
           };
         };
       };
