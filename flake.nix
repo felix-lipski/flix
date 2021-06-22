@@ -1,7 +1,5 @@
 {
   inputs = {
-  # stable.url = github:NixOS/nixpkgs-channels/20.09;
-  # unstable.url = github:NixOS/nixpkgs-channels/nixos-unstable;
     unstable.url = github:NixOS/nixpkgs;
     nixpkgs.url = github:NixOS/nixpkgs;
     nixos.url = github:nixos/nixpkgs/nixos-unstable;

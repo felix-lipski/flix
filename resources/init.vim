@@ -14,14 +14,22 @@ nnoremap <F12> :w <CR>
 
 nmap <F8> :Prettier <CR>
 
+" tabbing
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
 " colorscheme
 color delek
+
+" glsl highlight
+autocmd! BufNewFile,BufRead *.vs,*.fs set ft=glsl
 
 " treesitter
 lua <<EOF
 langs = { 
   "nix", "bash", "json", "yaml", "toml",
-  "c", "cpp", "ocaml", "haskell", "rust",
+  "c", "cpp", "haskell", "rust",
   "typescript", "javascript", "tsx", "python", 
   "html", "css", "scss", "latex"
 }

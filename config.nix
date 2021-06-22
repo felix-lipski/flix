@@ -26,7 +26,7 @@
     wget vim git ping
   ];
 
-  virtualisation.docker.enable = true;
+# virtualisation.docker.enable = true;
 
   fonts = {
     fonts = with pkgs; [

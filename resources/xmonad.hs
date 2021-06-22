@@ -2,6 +2,8 @@ import XMonad
 import Data.Monoid
 import System.Exit
 import XMonad.Hooks.DynamicLog
+import XMonad.Layout.Gaps
+import XMonad.Layout.Spacing
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -9,8 +11,8 @@ import qualified Data.Map        as M
 myTerminal      = "alacritty"
 myModMask       = mod4Mask
 myBorderWidth   = 1
-myNormalBorderColor  = "#black"
-myFocusedBorderColor = "#grey"
+myNormalBorderColor  = "#white"
+myFocusedBorderColor = "#blue"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -28,14 +30,16 @@ myClickJustFocuses = False
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
+myWorkspaces    = ["1","2","3","4","5","6"] ++ ["aux", "code", "web"]
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch a terminal
     [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
     -- launch dmenu
-    , ((modm,               xK_d     ), spawn "dmenu_run")
+    , ((modm,               xK_d     ), spawn "dmenu_run -fn Terminus -nb '#black' -nf '#white' -sb '#green' -sf '#white'")
+    -- launch browser
+    , ((modm,               xK_s     ), spawn "qutebrowser")
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
     -- close focused window
@@ -132,7 +136,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = tiled ||| Mirror tiled ||| Full
+myLayout = spacingRaw False (Border 4 4 4 4) True (Border 4 4 4 4) True $ tiled ||| Mirror tiled ||| Full
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -194,7 +198,8 @@ myLogHook = return ()
 -- per-workspace layout choices.
 --
 -- By default, do nothing.
-myStartupHook = return ()
+--myStartupHook = return ()
+myStartupHook = spawn "nitrogen --set-auto ~/wallpaper.png"
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
@@ -218,7 +223,7 @@ main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
 myBar = "xmobar"
 
 -- Custom PP, configure it as you like. It determines what is being written to the bar.
-myPP = xmobarPP { ppCurrent = xmobarColor "#429942" "" . wrap "<" ">" }
+myPP = xmobarPP { ppCurrent = xmobarColor "#blue" "" . wrap "⟨" "⟩" }
 
 -- Key binding to toggle the gap for the bar.
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)

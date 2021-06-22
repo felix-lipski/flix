@@ -1,6 +1,7 @@
 { lib, pkgs, config, inputs, ... }:
 let
-  palette = config.ui.spacelix.black;
+  paletteVariant = "black";
+  palette = config.ui.spacelix."${paletteVariant}";
   font = "Terminus";
   utils = (import ./utils.nix) {lib=lib;};
 in
@@ -12,7 +13,7 @@ in
   users.users.felix = {
     password = "n";
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ];
+    extraGroups = [ "wheel" ];
   };
 
   home-manager = {
@@ -23,38 +24,47 @@ in
         home.file.".xinitrc".text = "exec xmonad";
         home.file.".xmobarrc".text =
           (utils.interpolateColors palette.withGrey
-            (builtins.readFile ./dotfiles/xmobarrc.hs)
+            (builtins.readFile ./resources/xmobarrc.hs)
           );
+        home.file."wallpaper.png".source = resources/wallpaper.png;
         xsession = {
-	  enable = true;
-	  windowManager.xmonad = {
-	    enable = true;
-	    enableContribAndExtras = true;
+          enable = true;
+          windowManager.xmonad = {
+          enable = true;
+	      enableContribAndExtras = true;
             config = pkgs.writeText "xmonad.hs" 
               (utils.interpolateColors palette.withGrey
-                (builtins.readFile ./dotfiles/xmonad.hs)
+                (builtins.readFile ./resources/xmonad.hs)
               );
-	  };
-	};
+	      };
+	    };
         services.lorri.enable = true;
-	home.packages = with pkgs; [
-          haskellPackages.xmobar
-	  brave qutebrowser zathura
-          gnumake gcc cmake direnv 
+        services.picom = {
+          enable = true;
+          extraOptions = ''
+            corner-radius = 10;
+          '';
+        };
+	    home.packages = with pkgs; [
+          haskellPackages.xmobar nitrogen
+	      brave qutebrowser zathura mpv
+          gnumake gcc cmake direnv unzip
           tmux ripgrep coreutils
-          dmenu lf sxiv
+          dmenu lf sxiv vimv
           xcape
           yarn
+          rustc cargo
           cabal2nix cabal-install
           emacsGcc
           (agda.withPackages [ agdaPackages.standard-library ])
-	];
+	    ];
         programs = {
           alacritty = {
             enable = true;
             settings = {
               shell.program = "zsh";
               font = {
+              # size = 12;
                 size = 9;
                 normal.family = font;
                 bold.family   = font;
@@ -76,47 +86,52 @@ in
             enable = true;
             dotDir = ".config/zsh";
             shellAliases = {
-	      ls      = "ls --color";
+	          ls      = "ls --color";
               l       = "ls -la";
               v       = "nvim";
-	      m       = "make";
+	          m       = "make";
               e       = "make edit";
-	      c       = "cd";
-	      g       = "git";
+	          c       = "cd";
+	          g       = "git";
               x       = "exit";
-              nsh     = "nix-shell";
+              nsh     = "nix develop --command zsh";
               nunfree = "export NIXPKGS_ALLOW_UNFREE=1";
               xc      = "xcape -e 'Super_L=Escape'";
+              gcroots = "nix-store --gc --print-roots | grep home/"; 
             };
             localVariables = {
               PROMPT = "%F{blue}%n%f %F{green}%~%f ";
               EDITOR = "nvim";
               F = "https://github.com/felix-lipski/";
             };
-            initExtra = lib.fileContents ./dotfiles/zshrc;
+            initExtra = lib.fileContents ./resources/zshrc;
           };
           neovim = {
             enable = true;
             plugins = with pkgs.vimPlugins; [ 
               # general
               gruvbox 
-	      nvim-treesitter
-	      vim-css-color
+	          nvim-treesitter
+              vim-commentary
+	          vim-css-color
               goyo-vim
+              # misc langs
+              vim-glsl
               # functional langs
-	      vim-nix
+	          vim-nix
+              vim-ocaml
               agda-vim
               conjure
               aniseed
               # soydev langs
               coc-nvim
-              coc-tsserver
-              coc-eslint
-              coc-tslint
-              coc-snippets
-              coc-prettier
+            # coc-tsserver
+            # coc-eslint
+            # coc-tslint
+            # coc-snippets
+            # coc-prettier
             ];
-            extraConfig = lib.fileContents ./dotfiles/init.vim;
+            extraConfig = lib.fileContents ./resources/init.vim;
           };
           git = {
             enable = true;
