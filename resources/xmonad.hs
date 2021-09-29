@@ -2,17 +2,23 @@ import XMonad
 import Data.Monoid
 import System.Exit
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageDocks
 import XMonad.Layout.Gaps
 import XMonad.Layout.Spacing
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+import XMonad.Layout.Fullscreen
+import XMonad.Layout.NoBorders
+
+import qualified XMonad.StackSet as W
+
 myTerminal      = "alacritty"
 myModMask       = mod4Mask
 myBorderWidth   = 1
-myNormalBorderColor  = "#white"
-myFocusedBorderColor = "#blue"
+myNormalBorderColor  = "#grey"
+myFocusedBorderColor = "#white"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -30,14 +36,14 @@ myClickJustFocuses = False
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["1","2","3","4","5","6"] ++ ["aux", "code", "web"]
+myWorkspaces    = ["music","lang","flix","misc","doc","book", "aux", "code", "web"]
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch a terminal
     [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
     -- launch dmenu
-    , ((modm,               xK_d     ), spawn "dmenu_run -fn Terminus -nb '#black' -nf '#white' -sb '#green' -sf '#white'")
+    , ((modm,               xK_d     ), spawn "dmenu_run -fn Terminus:bold -nb '#black' -nf '#white' -sb '#green' -sf '#white'")
     -- launch browser
     , ((modm,               xK_s     ), spawn "qutebrowser")
     -- launch gmrun
@@ -136,7 +142,8 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = spacingRaw False (Border 4 4 4 4) True (Border 4 4 4 4) True $ tiled ||| Mirror tiled ||| Full
+myLayout = (spacingRaw False (Border 4 4 4 4) True (Border 4 4 4 4) True $ tiled) ||| avoidStruts (noBorders Full)
+-- myLayout = (spacingRaw False (Border 4 4 4 4) True (Border 4 4 4 4) True $ tiled ||| Mirror tiled) ||| noBorders Full
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -165,11 +172,13 @@ myLayout = spacingRaw False (Border 4 4 4 4) True (Border 4 4 4 4) True $ tiled 
 -- To match on the WM_NAME, you can use 'title' in the same way that
 -- 'className' and 'resource' are used below.
 --
-myManageHook = composeAll
-    [ className =? "MPlayer"        --> doFloat
-    , className =? "Gimp"           --> doFloat
-    , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore ]
+myManageHook = fullscreenManageHook
+
+-- composeAll
+--     [ className =? "MPlayer"        --> doFloat
+--     , className =? "Gimp"           --> doFloat
+--     , resource  =? "desktop_window" --> doIgnore
+--     , resource  =? "kdesktop"       --> doIgnore ]
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -180,7 +189,7 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = mempty
+myEventHook = fullscreenEventHook
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -213,7 +222,7 @@ myStartupHook = spawn "nitrogen --set-auto ~/wallpaper.png"
 --main = xmonad =<< statusBar "xmobar" defaults
 
 
-
+-- windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
 
 -- The main function.
@@ -223,7 +232,20 @@ main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
 myBar = "xmobar"
 
 -- Custom PP, configure it as you like. It determines what is being written to the bar.
-myPP = xmobarPP { ppCurrent = xmobarColor "#blue" "" . wrap "⟨" "⟩" }
+myPP = xmobarPP {
+      -- ppOutput = \x -> hPutStrLn xmproc0 x -- >> hPutStrLn xmproc1 x  >> hPutStrLn xmproc2 x
+      ppCurrent = xmobarColor "#blue" "" . wrap "⟨" "⟩" -- Current workspace in xmobar
+    , ppVisible = xmobarColor "#grey" ""                -- Visible but not current workspace
+    , ppHidden = xmobarColor "#white" ""   -- Hidden workspaces in xmobar
+    , ppHiddenNoWindows = xmobarColor "#grey" ""        -- Hidden workspaces (no windows)
+    , ppTitle = xmobarColor "#blue" "" . shorten 80     -- Title of active window in xmobar
+    , ppSep =  "<fc=#white> │ </fc>"                     -- Separators
+    , ppUrgent = xmobarColor "#red" "" . wrap "!" "!"  -- Urgent workspace
+    -- , ppExtras  = [windowCount]                           -- # of windows current workspace
+    , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]
+    }
+    -- ppCurrent = xmobarColor "#blue" "" . wrap "⟨" "⟩" 
+    -- }
 
 -- Key binding to toggle the gap for the bar.
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)

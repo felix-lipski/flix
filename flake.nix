@@ -11,6 +11,12 @@
     emacs-overlay.url = github:nix-community/emacs-overlay;
     neovim-nightly-overlay.url = github:nix-community/neovim-nightly-overlay;
     spacelix.url = github:felix-lipski/spacelix;
+    auto-bg.url = github:felix-lipski/auto-bg;
+    nix-boiler.url = github:felix-lipski/nix-boiler;
+    futhark-vim = {
+      url = github:BeneCollyridam/futhark-vim;
+      flake = false;
+    };
   };
 
   outputs = { nixpkgs, nix, self, nixos, nix-doom-emacs, ... }@inputs: 
@@ -23,8 +29,8 @@
 	    { nixpkgs.overlays = overlays; }
             (import ./config.nix)
             inputs.home-manager.nixosModules.home-manager
-            inputs.spacelix.spacelix-module
-          # (import /home/felix/code/spacelix/spacelix-module.nix)
+            # inputs.spacelix.spacelix-module
+            (import /home/felix/code/nix/spacelix/spacelix-module.nix)
           ];
         };
       in {

@@ -4,17 +4,18 @@ Config {
 --data ℕ : Set where
  
    -- appearance
-     font =         "xft:Terminus:size=10:normal:antialias=true"
+     font =         "xft:Terminus:size=10:bold:antialias=true"
    , bgColor =      "#black"
    , fgColor =      "#white"
    , position =     Top
    , border =       BottomB
    , borderColor =  "#white"
+   , borderWidth =  1
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "%StdinReader% | %battery% %multicpu% %coretemp% %memory% %dynnetwork% }{ %RJTT% | %date%"
+   , template = "%StdinReader% │ %battery% %multicpu% %coretemp% %memory% %dynnetwork% }{ %RJTT% │ %date%"
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -41,11 +42,12 @@ Config {
    , commands = 
 
         -- weather monitor
-        [ Run Weather "RJTT" [ "--template", "<fc=#blue><skyCondition></fc> | <fc=#blue><tempC></fc>°C"
+        [ Run Weather "RJTT" [ "--template", "<fc=#blue><skyCondition></fc> │ <fc=#blue><tempC></fc>°C"
                              ] 36000
 
         -- network activity monitor (dynamic interface resolution)
-        , Run DynNetwork     [ "--template" , "<dev> : <tx>kB/s|<rx>kB/s"
+        -- , Run DynNetwork     [ "--template" , "<dev> : <tx>kB/s|<rx>kB/s"
+        , Run DynNetwork     [ "--template" , "<tx>kB/s│<rx>kB/s"
                              , "--Low"      , "1000"       -- units: B/s
                              , "--High"     , "5000"       -- units: B/s
                              , "--low"      , "#green"
@@ -54,7 +56,7 @@ Config {
                              ] 10
 
         -- cpu activity monitor
-        , Run MultiCpu       [ "--template" , "<total0>%|<total1>%"
+        , Run MultiCpu       [ "--template" , "<total0>%"
                              , "--Low"      , "50"         -- units: %
                              , "--High"     , "85"         -- units: %
                              , "--low"      , "#green"
@@ -63,7 +65,7 @@ Config {
                              ] 10
 
         -- cpu core temperature monitor
-        , Run CoreTemp       [ "--template" , "<core0>°C|<core1>°C"
+        , Run CoreTemp       [ "--template" , "<core0>°C"
                              , "--Low"      , "70"        -- units: °C
                              , "--High"     , "80"        -- units: °C
                              , "--low"      , "#green"
@@ -100,7 +102,7 @@ Config {
         -- time and date indicator 
         --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
         --, Run Date           "<fc=#cyan>%F</fc> \<%a\> <fc=#cyan>%T</fc>" "date" 10
-        , Run Date           "<fc=#cyan>%F</fc> ⟨%a⟩ <fc=#cyan>%T</fc>" "date" 10
+        , Run Date           "<fc=#green>%F</fc> ⟨%a⟩ <fc=#green>%T</fc>" "date" 10
 
         -- keyboard layout indicator
         , Run Kbd            [ ("us(dvorak)" , "<fc=#blue>DV</fc>")
