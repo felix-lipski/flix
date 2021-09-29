@@ -29,8 +29,8 @@
 	    { nixpkgs.overlays = overlays; }
             (import ./config.nix)
             inputs.home-manager.nixosModules.home-manager
-            # inputs.spacelix.spacelix-module
-            (import /home/felix/code/nix/spacelix/spacelix-module.nix)
+            inputs.spacelix.spacelix-module
+            # (import /home/felix/code/nix/spacelix/spacelix-module.nix)
           ];
         };
       in {

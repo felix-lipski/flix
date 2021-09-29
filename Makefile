@@ -1,5 +1,7 @@
 switch = sudo nixos-rebuild switch
 
+main: pure
+
 normal:
 	$(switch) --impure --flake .
 pure:

@@ -31,13 +31,13 @@ in
           (utils.interpolateColors palette.withGrey
             (builtins.readFile ./resources/xmobarrc.hs)
           );
-        # home.file."wallpaper.png".source = resources/wallpaper.png;
-        home.activation = {
-          foo = ''
-            ${inputs.auto-bg.defaultPackage."x86_64-linux"}/bin/gen_wall "${palette.dark.black}" ~/code/misc/img/logos/nixos-pure.png
-            mv out.png wallpaper.png
-          '';
-        };
+        home.file."wallpaper.png".source = resources/wallpaper.png;
+        # home.activation = {
+        #   foo = ''
+        #     ${inputs.auto-bg.defaultPackage."x86_64-linux"}/bin/gen_wall "${palette.dark.black}" ~/code/misc/img/logos/nixos-pure.png
+        #     mv out.png wallpaper.png
+        #   '';
+        # };
         xsession = {
           enable = true;
           windowManager.xmonad = {
