@@ -32,6 +32,7 @@ in
             (builtins.readFile ./resources/xmobarrc.hs)
           );
         home.file."wallpaper.png".source = resources/wallpaper.png;
+        home.file.".config/nvim/colors/xelex.vim".source = resources/xelex.vim;
         # home.activation = {
         #   foo = ''
         #     ${inputs.auto-bg.defaultPackage."x86_64-linux"}/bin/gen_wall "${palette.dark.black}" ~/code/misc/img/logos/nixos-pure.png
@@ -76,8 +77,8 @@ in
             settings = {
               shell.program = "zsh";
               font = {
-                # size = 12;
-                size = 9;
+                size = 12;
+                # size = 9;
                 normal.family = font;
                 bold.family   = font;
                 italic.family = font;
