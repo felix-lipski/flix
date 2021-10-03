@@ -48,9 +48,17 @@
           ];
           specialArgs = { inherit inputs; };
         };
+        dt = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = base.modules ++ [ 
+            (import ./hosts/dt-config.nix)
+          ];
+          specialArgs = { inherit inputs; };
+        };
       };
   
     vm = self.nixosConfigurations.vm.config.system.build.toplevel;
     tp = self.nixosConfigurations.tp.config.system.build.toplevel;
+    dt = self.nixosConfigurations.dt.config.system.build.toplevel;
   };
 }
