@@ -3,6 +3,8 @@
 {
   imports = [ ./felix.nix ];
 
+  # services.localtime.enable = true;
+
   nix = {
     package = pkgs.nixUnstable;
     extraOptions = "experimental-features = nix-command flakes";

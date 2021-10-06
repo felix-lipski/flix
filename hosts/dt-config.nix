@@ -3,18 +3,32 @@
 {
   imports = [./dt-hardware.nix];
 
+  # services.xserver.videoDrivers = [ "nvidia" ];
+
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
     grub.useOSProber = true;
+    # extraModulePackages = [ config.boot.kernelPackages.rtl8xxxu ];
   };
+  # boot.extraModulePackages = [
+    # config.boot.kernelPackages.rtl8192eu
+    # config.boot.kernelPackages.rtl8822bu
+  # ];
+
+  # boot.loader.grub.gfxmodeEfi = "1920x1080";
+  # boot.loader.grub.gfxpayloadEfi ="";
+  # boot.loader.grub.gfxpayloadEfi = "1920x1080";
 
   networking = {
     hostName = "dt";
     networkmanager.enable = true;
     useDHCP = false;
-    interfaces.enp0s20u9.useDHCP = true;
-    interfaces.enp3s0.useDHCP = true;
+    interfaces = {
+      enp0s20u9.useDHCP = true;
+      enp3s0.useDHCP = true;
+      # wlp0s20u10.useDHCP = true;
+    };
   };
 
   # This value determines the NixOS release from which the default

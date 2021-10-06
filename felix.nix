@@ -11,6 +11,7 @@ let
 
 in
 {
+
   console.colors = map (lib.strings.removePrefix "#") (with palette.withGrey; [
     black red green yellow blue magenta cyan white
     grey red green yellow blue magenta cyan white
