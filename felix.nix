@@ -68,7 +68,7 @@ in
           yarn
           rustc cargo
           cabal2nix cabal-install
-          emacsGcc
+          # emacsGcc
           (agda.withPackages [ agdaPackages.standard-library ])
           inputs.nix-boiler.defaultPackage."x86_64-linux"
 	    ];

@@ -22,7 +22,10 @@
   outputs = { nixpkgs, nix, self, nixos, nix-doom-emacs, ... }@inputs: 
     {
       nixosConfigurations = let
-        overlays = [ inputs.neovim-nightly-overlay.overlay inputs.emacs-overlay.overlay ];
+        overlays = [ 
+          inputs.neovim-nightly-overlay.overlay 
+          # inputs.emacs-overlay.overlay 
+        ];
         base = {
           system = "x86_64-linux";
           modules = [
