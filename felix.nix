@@ -8,11 +8,10 @@ let
     name = "futhark-vim";
     src = inputs.futhark-vim;
   };
-
 in
-{
+with palette.withGrey; {
 
-  console.colors = map (lib.strings.removePrefix "#") (with palette.withGrey; [
+  console.colors = map (lib.strings.removePrefix "#") ([
     black red green yellow blue magenta cyan white
     grey red green yellow blue magenta cyan white
   ]);
@@ -21,6 +20,7 @@ in
     isNormalUser = true;
     extraGroups = [ "wheel" "audio" ];
   };
+  nixpkgs.config.allowUnfree = true;
 
   home-manager = {
     useGlobalPkgs = true;
@@ -60,17 +60,19 @@ in
         };
 	    home.packages = with pkgs; [
           haskellPackages.xmobar nitrogen
-	      brave qutebrowser mpv
+	      brave mpv
           gnumake gcc cmake direnv unzip
           tmux ripgrep coreutils
           dmenu lf sxiv vimv
           xcape
           yarn
+          slack
           rustc cargo
           cabal2nix cabal-install
           # emacsGcc
           (agda.withPackages [ agdaPackages.standard-library ])
           inputs.nix-boiler.defaultPackage."x86_64-linux"
+          godotMonoBin
 	    ];
         programs = {
           alacritty = {
@@ -86,7 +88,7 @@ in
               };
               cursor.style = "Beam";
               colors = {
-                primary = with palette.dark; {
+                primary = {
                   background = black;
                   foreground = white;
                 };
@@ -158,14 +160,21 @@ in
           };
           git = {
             enable = true;
-            userEmail = "felix.lipski7@gmail.com";
-            userName = "felix-lipski";
+            # userEmail = "felix.lipski7@gmail.com";
+            # userName = "felix-lipski";
+            extraConfig = ''
+[user]
+  email = "felix.lipski7@gmail.com";
+  name = "felix-lipski";
+[includeIf "gitdir:~/code/work/"]
+  path = ~/.gitconfig-work
+'';
           };
           zathura = {
             enable = true;
             options = { 
-              default-bg = palette.withGrey.black; 
-              default-fg = palette.withGrey.white; 
+              default-bg = black; 
+              default-fg = white; 
             };
             extraConfig = ''
               set recolor-lightcolor \${palette.withGrey.black}
@@ -173,6 +182,70 @@ in
               set recolor
             '';
           };
+          qutebrowser = {
+            enable = true;
+            settings = {
+              tabs.position = "left";
+              colors = {
+                tabs = {
+                  even = {bg = black; fg = grey;};
+                  odd = {bg = black; fg = grey;};
+                  selected.even = {bg = white; fg = black;};
+                  selected.odd = {bg = white; fg = black;};
+                  bar.bg = black;
+                  indicator = { stop = green; start = blue; error = red; };
+                };
+                downloads = {
+                  bar.bg = black;
+                  error.bg = red;
+                  stop.bg = green;
+                  start.bg = yellow;
+                };
+                statusbar = {
+                  caret   = { fg = white; bg = cyan;  };
+                  insert  = { fg = white; bg = green; };
+                  normal  = { fg = white; bg = black; };
+                  command = { fg = yellow; bg = black; };
+                  url.success = { http.fg = blue; https.fg = green; };
+                };
+                completion = {
+                  category = { bg = black; fg = white; border = { top = white; bottom = white; }; };
+                  item.selected = { bg = white; fg = black; match.fg = green; border = { top = white; bottom = white; }; };
+                  match.fg = green;
+                  even.bg = black;
+                  odd.bg = black;
+                  fg = [white white blue];
+                };
+                webpage.darkmode.enabled = true;
+                messages = {
+                  error   = { fg = black;  bg = red;   border = red; };
+                  info    = { fg = blue;   bg = black; border = blue; };
+                  warning = { fg = yellow; bg = black; border = yellow; };
+                };
+              };
+              fonts = let 
+                bold = "bold 14px 'terminus'"; 
+              in {
+                tabs.selected = bold;
+                tabs.unselected = bold;
+                downloads = bold;
+                statusbar = bold;
+                completion.category = bold;
+                completion.entry = bold;
+                messages.info = bold;
+                messages.error = bold;
+                messages.warning = bold;
+              };
+            };
+            searchEngines = {
+              n = "https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&type=packages&query={}";
+              w = "https://en.wikipedia.org/wiki/Special:Search?search={}&go=Go&ns0=1";
+              aw = "https://wiki.archlinux.org/?search={}";
+              nw = "https://nixos.wiki/index.php?search={}";
+              g = "https://www.google.com/search?hl=en&q={}";
+            };
+          };
+          vscode.enable = true;
         };
       };
     };

@@ -4,7 +4,7 @@ Config {
 --data ℕ : Set where
  
    -- appearance
-     font =         "xft:Terminus:size=10:bold:antialias=true"
+     font =         "xft:Terminus:size=12:bold:antialias=true"
    , bgColor =      "#black"
    , fgColor =      "#white"
    , position =     Top

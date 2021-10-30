@@ -17,6 +17,10 @@
       url = github:BeneCollyridam/futhark-vim;
       flake = false;
     };
+    nixos-godot = {
+      url = github:sgillespie/nixos-godot-bin;
+      flake = false;
+    };
   };
 
   outputs = { nixpkgs, nix, self, nixos, nix-doom-emacs, ... }@inputs: 
@@ -25,6 +29,7 @@
         overlays = [ 
           inputs.neovim-nightly-overlay.overlay 
           # inputs.emacs-overlay.overlay 
+          (import "${inputs.nixos-godot}/overlay.nix")
         ];
         base = {
           system = "x86_64-linux";

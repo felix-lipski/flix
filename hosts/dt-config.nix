@@ -3,7 +3,12 @@
 {
   imports = [./dt-hardware.nix];
 
-  # services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = [ 
+    # "modesetting" 
+    "nvidia" 
+  ];
+
+  # boot.blacklistedKernelModules = ["nouveau" "nvidiafb"];
 
   boot.loader = {
     systemd-boot.enable = true;
@@ -11,10 +16,14 @@
     grub.useOSProber = true;
     # extraModulePackages = [ config.boot.kernelPackages.rtl8xxxu ];
   };
-  # boot.extraModulePackages = [
+
+  # boot.kernelPackages = pkgs.linuxPackages_4_9;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.extraModulePackages = [
+    config.boot.kernelPackages.nvidia_x11
     # config.boot.kernelPackages.rtl8192eu
     # config.boot.kernelPackages.rtl8822bu
-  # ];
+  ];
 
   # boot.loader.grub.gfxmodeEfi = "1920x1080";
   # boot.loader.grub.gfxpayloadEfi ="";

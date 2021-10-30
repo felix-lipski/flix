@@ -376,11 +376,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1627308550,
-        "narHash": "sha256-ygC17IyGAPY20ZgttjRCj6UfVxs71rOgTCfbWR4dKK8=",
+        "lastModified": 1635411137,
+        "narHash": "sha256-0PpoSKqJM5KV4qP93o0uoN7jRYpqQ8/NgdERG06VHz4=",
         "owner": "felix-lipski",
         "repo": "nix-boiler",
-        "rev": "7a28528001b52ff98b2c7977f25ca23d2109c621",
+        "rev": "350c9886de81c80996dec4e46ea15c48062c28ec",
         "type": "github"
       },
       "original": {
@@ -475,6 +475,22 @@
         "type": "github"
       }
     },
+    "nixos-godot": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1622601186,
+        "narHash": "sha256-oU7rllJY9lTujZacX/E9g21vCuaLn2NmX7rYUCy/tCM=",
+        "owner": "sgillespie",
+        "repo": "nixos-godot-bin",
+        "rev": "8616a18dec39c12e8d943d30db857b818b1e70f5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sgillespie",
+        "repo": "nixos-godot-bin",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1623601054,
@@ -523,11 +539,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1623601054,
-        "narHash": "sha256-YrS++a0N3up+cgUqi719bZb7NNiGTM9V0YzHLhGrGWk=",
+        "lastModified": 1635405685,
+        "narHash": "sha256-S7QGJFLHmUzbefmeje+1pSuzOg7rXIG5oKiXImkA3x8=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "9a3f4867099bc868b77817c272dce9f39f808376",
+        "rev": "19b87ec97df2819e4f4862d1c7521a4fec2e20fc",
         "type": "github"
       },
       "original": {
@@ -704,6 +720,7 @@
         "nix-boiler": "nix-boiler",
         "nix-doom-emacs": "nix-doom-emacs",
         "nixos": "nixos",
+        "nixos-godot": "nixos-godot",
         "nixpkgs": "nixpkgs_6",
         "spacelix": "spacelix",
         "unstable": "unstable"
@@ -731,11 +748,11 @@
         "nixpkgs": "nixpkgs_8"
       },
       "locked": {
-        "lastModified": 1620846978,
-        "narHash": "sha256-SqVguwn8mW8gLnLyzNp3DoSHGEBvCl/VEirModiuN14=",
+        "lastModified": 1635538703,
+        "narHash": "sha256-wNG+3E2y+GYotsiJTO0xj/B4jP+o5oIPeetBlF2gf/M=",
         "owner": "felix-lipski",
         "repo": "spacelix",
-        "rev": "8c3b78bdbee075b193a70282946d9187692729e3",
+        "rev": "10f5d70dcd931ee5b0eace89bfe59d5b57e01b40",
         "type": "github"
       },
       "original": {
