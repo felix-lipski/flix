@@ -1,6 +1,6 @@
 { lib, pkgs, config, inputs, ... }:
 let
-  paletteVariant = "black";
+  paletteVariant = "dark";
   palette = config.ui.spacelix."${paletteVariant}";
   font = "Terminus";
   utils = (import ./utils.nix) {lib=lib;};
@@ -8,9 +8,9 @@ let
     name = "futhark-vim";
     src = inputs.futhark-vim;
   };
+  wallpaper = (import ./wallpaper.nix) {inherit pkgs inputs palette;};
 in
 with palette.withGrey; {
-
   console.colors = map (lib.strings.removePrefix "#") ([
     black red green yellow blue magenta cyan white
     grey red green yellow blue magenta cyan white
@@ -27,19 +27,17 @@ with palette.withGrey; {
     useUserPackages = true;
     users = {
       felix = {
-        home.file.".xinitrc".text = "exec xmonad";
-        home.file.".xmobarrc".text =
+        home.file = {
+          ".xinitrc".text = "exec xmonad";
+          ".xmobarrc".text =
           (utils.interpolateColors palette.withGrey
             (builtins.readFile ./resources/xmobarrc.hs)
           );
-        home.file."wallpaper.png".source = resources/wallpaper.png;
-        home.file.".config/nvim/colors/xelex.vim".source = resources/xelex.vim;
-        # home.activation = {
-        #   foo = ''
-        #     ${inputs.auto-bg.defaultPackage."x86_64-linux"}/bin/gen_wall "${palette.dark.black}" ~/code/misc/img/logos/nixos-pure.png
-        #     mv out.png wallpaper.png
-        #   '';
-        # };
+          "wallpaper.png".source = ''${wallpaper}/wallpaper.png'';
+          ".config/nvim/colors/xelex.vim".source = resources/xelex.vim;
+          ".config/nvim/coc-settings.json".text = ''{"suggest.noselect": false}'';
+        };
+        home.sessionPath = [ "$HOME/.emacs.d/bin" ];
         xsession = {
           enable = true;
           windowManager.xmonad = {
@@ -69,10 +67,8 @@ with palette.withGrey; {
           slack
           rustc cargo
           cabal2nix cabal-install
-          # emacsGcc
           (agda.withPackages [ agdaPackages.standard-library ])
           inputs.nix-boiler.defaultPackage."x86_64-linux"
-          godotMonoBin
 	    ];
         programs = {
           alacritty = {
@@ -115,6 +111,7 @@ with palette.withGrey; {
 	          g        = "git";
               x        = "exit";
               z        = "zathura";
+              s        = "sxiv";
               nsh      = "nix develop --command zsh";
               nunfree  = "export NIXPKGS_ALLOW_UNFREE=1";
               xc       = "xcape -e 'Super_L=Escape'";
@@ -238,11 +235,13 @@ with palette.withGrey; {
               };
             };
             searchEngines = {
+              g = "https://github.com/felix-lipski/{}";
+              y = "https://www.youtube.com/results?search_query={}";
               n = "https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&type=packages&query={}";
               w = "https://en.wikipedia.org/wiki/Special:Search?search={}&go=Go&ns0=1";
               aw = "https://wiki.archlinux.org/?search={}";
               nw = "https://nixos.wiki/index.php?search={}";
-              g = "https://www.google.com/search?hl=en&q={}";
+              google = "https://www.google.com/search?hl=en&q={}";
             };
           };
           vscode.enable = true;

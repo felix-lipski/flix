@@ -49,12 +49,4 @@
       cozette
     ];
   };
-
-  # networking.extraHosts = ''
-  #   0.0.0.0 youtube.com
-  #   0.0.0.0 m.youtube.com
-  #   0.0.0.0 www.youtube.com
-  # '';
-
- # system.stateVersion = "20.09";
 }

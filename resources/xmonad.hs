@@ -36,7 +36,7 @@ myClickJustFocuses = False
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["music","lang","flix","misc","doc","book", "aux", "code", "web"]
+myWorkspaces    = ["music","comm","3","4","5","6", "7", "code", "web"]
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 

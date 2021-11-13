@@ -748,11 +748,11 @@
         "nixpkgs": "nixpkgs_8"
       },
       "locked": {
-        "lastModified": 1635538703,
-        "narHash": "sha256-wNG+3E2y+GYotsiJTO0xj/B4jP+o5oIPeetBlF2gf/M=",
+        "lastModified": 1636747824,
+        "narHash": "sha256-7D5yCI/r42iCWbLfiESPBAPuZVLT5nPg5qOcnDB782w=",
         "owner": "felix-lipski",
         "repo": "spacelix",
-        "rev": "10f5d70dcd931ee5b0eace89bfe59d5b57e01b40",
+        "rev": "7da8f1eaefd1d666afbfa4efcd14537a125c7177",
         "type": "github"
       },
       "original": {
