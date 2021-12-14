@@ -24,6 +24,9 @@
       startx.enable = true;
       defaultSession = "none+xmonad";
     };
+    desktopManager = {
+      xfce.enable = true;
+    };
     xkbOptions = "caps:super";
   };
 

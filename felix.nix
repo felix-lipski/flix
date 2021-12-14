@@ -21,6 +21,16 @@ with palette.withGrey; {
     extraGroups = [ "wheel" "audio" ];
   };
   nixpkgs.config.allowUnfree = true;
+  programs.steam.enable = true;
+  systemd.user.services.foo = {
+    script = ''
+      systemctl --user import-environment XAUTHORITY DISPLAY; 
+      systemctl --user start picom.service
+    '';
+    wantedBy = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+  };
+
 
   home-manager = {
     useGlobalPkgs = true;
@@ -36,6 +46,11 @@ with palette.withGrey; {
           "wallpaper.png".source = ''${wallpaper}/wallpaper.png'';
           ".config/nvim/colors/xelex.vim".source = resources/xelex.vim;
           ".config/nvim/coc-settings.json".text = ''{"suggest.noselect": false}'';
+          ".doom.d/themes/doom-spacelix-theme.el".text = 
+            (utils.interpolateColors palette.withGrey
+              (builtins.readFile ./resources/doom-spacelix-theme.el)
+            );
+          ".agda".source = (import resources/agda-dir.nix) { inherit pkgs; };
         };
         home.sessionPath = [ "$HOME/.emacs.d/bin" ];
         xsession = {
@@ -52,6 +67,9 @@ with palette.withGrey; {
         services.lorri.enable = true;
         services.picom = {
           enable = true;
+          activeOpacity = "0.8";
+          inactiveOpacity = "0.8";
+          shadow = true;
           extraOptions = ''
             corner-radius = 10;
           '';
@@ -65,7 +83,6 @@ with palette.withGrey; {
           xcape
           yarn
           slack
-          rustc cargo
           cabal2nix cabal-install
           (agda.withPackages [ agdaPackages.standard-library ])
           inputs.nix-boiler.defaultPackage."x86_64-linux"
@@ -112,6 +129,7 @@ with palette.withGrey; {
               x        = "exit";
               z        = "zathura";
               s        = "sxiv";
+	          pgl      = "git log --pretty=oneline";
               nsh      = "nix develop --command zsh";
               nunfree  = "export NIXPKGS_ALLOW_UNFREE=1";
               xc       = "xcape -e 'Super_L=Escape'";
@@ -144,6 +162,7 @@ with palette.withGrey; {
               agda-vim
               conjure
               aniseed
+              ats-vim
               # soydev langs
               vim-closetag
               coc-nvim
@@ -163,6 +182,8 @@ with palette.withGrey; {
 [user]
   email = "felix.lipski7@gmail.com";
   name = "felix-lipski";
+[includeIf "gitdir:~/code/sara/"]
+  path = ~/.gitconfig-sara
 [includeIf "gitdir:~/code/work/"]
   path = ~/.gitconfig-work
 '';
