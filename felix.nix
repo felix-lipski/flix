@@ -1,7 +1,8 @@
 { lib, pkgs, config, inputs, ... }:
 let
-  paletteVariant = "dark";
-  palette = config.ui.spacelix."${paletteVariant}";
+  spacelixVariant = "dark";
+  # palette = config.ui.spacelix."${spacelixVariant}".withGrey;
+  palette = import ./gruvbox.nix;
   font = "Terminus";
   utils = (import ./utils.nix) {lib=lib;};
   futhark-vim = pkgs.vimUtils.buildVimPlugin {
@@ -10,7 +11,7 @@ let
   };
   wallpaper = (import ./wallpaper.nix) {inherit pkgs inputs palette;};
 in
-with palette.withGrey; {
+with palette; {
   console.colors = map (lib.strings.removePrefix "#") ([
     black red green yellow blue magenta cyan white
     grey red green yellow blue magenta cyan white
@@ -21,16 +22,6 @@ with palette.withGrey; {
     extraGroups = [ "wheel" "audio" ];
   };
   nixpkgs.config.allowUnfree = true;
-  programs.steam.enable = true;
-  systemd.user.services.foo = {
-    script = ''
-      systemctl --user import-environment XAUTHORITY DISPLAY; 
-      systemctl --user start picom.service
-    '';
-    wantedBy = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
-  };
-
 
   home-manager = {
     useGlobalPkgs = true;
@@ -40,14 +31,14 @@ with palette.withGrey; {
         home.file = {
           ".xinitrc".text = "exec xmonad";
           ".xmobarrc".text =
-          (utils.interpolateColors palette.withGrey
+          (utils.interpolateColors palette
             (builtins.readFile ./resources/xmobarrc.hs)
           );
           "wallpaper.png".source = ''${wallpaper}/wallpaper.png'';
           ".config/nvim/colors/xelex.vim".source = resources/xelex.vim;
           ".config/nvim/coc-settings.json".text = ''{"suggest.noselect": false}'';
           ".doom.d/themes/doom-spacelix-theme.el".text = 
-            (utils.interpolateColors palette.withGrey
+            (utils.interpolateColors palette
               (builtins.readFile ./resources/doom-spacelix-theme.el)
             );
           ".agda".source = (import resources/agda-dir.nix) { inherit pkgs; };
@@ -59,7 +50,7 @@ with palette.withGrey; {
           enable = true;
 	      enableContribAndExtras = true;
             config = pkgs.writeText "xmonad.hs" 
-              (utils.interpolateColors palette.withGrey
+              (utils.interpolateColors palette
                 (builtins.readFile ./resources/xmonad.hs)
               );
 	      };
@@ -100,14 +91,14 @@ with palette.withGrey; {
                 italic.family = font;
               };
               cursor.style = "Beam";
-              colors = {
+              colors = rec {
                 primary = {
                   background = black;
                   foreground = white;
                 };
-                normal = palette.dark;
-                bright = palette.light;
-                dim    = palette.dark;
+                normal = { inherit black red green yellow blue magenta cyan white; };
+                dim    = normal;
+                bright = normal // { black = grey; };
               };
               window.padding = {
                 x = 4;
@@ -140,6 +131,7 @@ with palette.withGrey; {
               PROMPT = "%B%F{blue}%n%f %F{green}%~%f%b ";
               EDITOR = "nvim";
               F = "https://github.com/felix-lipski/";
+              # export PATH="$HOME/.npm-packages/bin:$PATH"
             };
             initExtra = lib.fileContents ./resources/zshrc;
           };
@@ -195,8 +187,8 @@ with palette.withGrey; {
               default-fg = white; 
             };
             extraConfig = ''
-              set recolor-lightcolor \${palette.withGrey.black}
-              set recolor-darkcolor \${palette.withGrey.white}
+              set recolor-lightcolor \${palette.black}
+              set recolor-darkcolor \${palette.white}
               set recolor
             '';
           };
