@@ -4,39 +4,28 @@
   imports = [./dt-hardware.nix];
 
   services.xserver.videoDrivers = [ 
-    # "modesetting" 
     "nvidia" 
   ];
-
-  # boot.blacklistedKernelModules = ["nouveau" "nvidiafb"];
+  
+  programs.steam.enable = true;
 
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
     grub.useOSProber = true;
-    # extraModulePackages = [ config.boot.kernelPackages.rtl8xxxu ];
   };
 
-  # boot.kernelPackages = pkgs.linuxPackages_4_9;
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.extraModulePackages = [
     config.boot.kernelPackages.nvidia_x11
-    # config.boot.kernelPackages.rtl8192eu
-    # config.boot.kernelPackages.rtl8822bu
   ];
-
-  # boot.loader.grub.gfxmodeEfi = "1920x1080";
-  # boot.loader.grub.gfxpayloadEfi ="";
-  # boot.loader.grub.gfxpayloadEfi = "1920x1080";
 
   networking = {
     hostName = "dt";
     networkmanager.enable = true;
     useDHCP = false;
     interfaces = {
-      # enp0s20u9.useDHCP = true;
       enp3s0.useDHCP = true;
-      # wlp0s20u10.useDHCP = true;
     };
   };
 
@@ -44,6 +33,23 @@
     opencl-icd
     ocl-icd
     intel-ocl
+  ];
+
+  environment.systemPackages = with pkgs; [
+    # support both 32- and 64-bit applications
+    wineWowPackages.stable
+    # support 32-bit only
+    wine
+    # support 64-bit only
+    (wine.override { wineBuild = "wine64"; })
+    # wine-staging (version with experimental features)
+    wineWowPackages.staging
+    # winetricks and other programs depending on wine need to use the same wine version
+    (winetricks.override { wine = wineWowPackages.staging; })
+
+    # wine-mono
+
+    lutris
   ];
 
   # This value determines the NixOS release from which the default

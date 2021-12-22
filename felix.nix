@@ -1,20 +1,8 @@
 { lib, pkgs, config, inputs, ... }:
 let
-  sara_colors = {
-    foreground   = "#666666";
-    # foreground   = "#99a799";
-    middleground = "#adc2a9";
-    background   = "#fdefef";
-  };
-  palette_felix = config.ui.spacelix.dark;
-  paletteBase = palette_felix.dark // {
-    white = sara_colors.foreground;
-  };
-  palette_sara = rec {
-    dark     = paletteBase // { black = sara_colors.background; };
-    light    = paletteBase // { black = sara_colors.middleground; };
-    withGrey = dark // { grey = sara_colors.middleground; };
-  };
+  spacelixVariant = "dark";
+  # palette = config.ui.spacelix."${spacelixVariant}".withGrey;
+  palette = import ./gruvbox.nix;
   font = "Terminus";
   utils = (import ./utils.nix) {lib=lib;};
   futhark-vim = pkgs.vimUtils.buildVimPlugin {
@@ -26,7 +14,7 @@ let
   # change to palette_felix for dark mode
   palette = palette_sara;
 in
-with palette.withGrey; {
+with palette; {
   console.colors = map (lib.strings.removePrefix "#") ([
     black red green yellow blue magenta cyan white
     grey red green yellow blue magenta cyan white
@@ -46,12 +34,17 @@ with palette.withGrey; {
         home.file = {
           ".xinitrc".text = "exec xmonad";
           ".xmobarrc".text =
-          (utils.interpolateColors palette.withGrey
+          (utils.interpolateColors palette
             (builtins.readFile ./resources/xmobarrc.hs)
           );
           "wallpaper.png".source = ''${wallpaper}/wallpaper.png'';
           ".config/nvim/colors/xelex.vim".source = resources/xelex.vim;
           ".config/nvim/coc-settings.json".text = ''{"suggest.noselect": false}'';
+          ".doom.d/themes/doom-spacelix-theme.el".text = 
+            (utils.interpolateColors palette
+              (builtins.readFile ./resources/doom-spacelix-theme.el)
+            );
+          ".agda".source = (import resources/agda-dir.nix) { inherit pkgs; };
         };
         home.sessionPath = [ "$HOME/.emacs.d/bin" ];
         xsession = {
@@ -60,7 +53,7 @@ with palette.withGrey; {
           enable = true;
 	      enableContribAndExtras = true;
             config = pkgs.writeText "xmonad.hs" 
-              (utils.interpolateColors palette.withGrey
+              (utils.interpolateColors palette
                 (builtins.readFile ./resources/xmonad.hs)
               );
 	      };
@@ -68,6 +61,9 @@ with palette.withGrey; {
         services.lorri.enable = true;
         services.picom = {
           enable = true;
+          activeOpacity = "0.8";
+          inactiveOpacity = "0.8";
+          shadow = true;
           extraOptions = ''
             corner-radius = 10;
           '';
@@ -81,7 +77,6 @@ with palette.withGrey; {
           xcape
           yarn
           slack
-          rustc cargo
           cabal2nix cabal-install
           (agda.withPackages [ agdaPackages.standard-library ])
           inputs.nix-boiler.defaultPackage."x86_64-linux"
@@ -99,14 +94,14 @@ with palette.withGrey; {
                 italic.family = font;
               };
               cursor.style = "Beam";
-              colors = {
+              colors = rec {
                 primary = {
                   background = black;
                   foreground = white;
                 };
-                normal = palette.dark;
-                bright = palette.light;
-                dim    = palette.dark;
+                normal = { inherit black red green yellow blue magenta cyan white; };
+                dim    = normal;
+                bright = normal // { black = grey; };
               };
               window.padding = {
                 x = 4;
@@ -128,6 +123,7 @@ with palette.withGrey; {
               x        = "exit";
               z        = "zathura";
               s        = "sxiv";
+	          pgl      = "git log --pretty=oneline";
               nsh      = "nix develop --command zsh";
               nunfree  = "export NIXPKGS_ALLOW_UNFREE=1";
               xc       = "xcape -e 'Super_L=Escape'";
@@ -138,6 +134,7 @@ with palette.withGrey; {
               PROMPT = "%B%F{blue}%n%f %F{green}%~%f%b ";
               EDITOR = "nvim";
               F = "https://github.com/felix-lipski/";
+              # export PATH="$HOME/.npm-packages/bin:$PATH"
             };
             initExtra = lib.fileContents ./resources/zshrc;
           };
@@ -160,6 +157,7 @@ with palette.withGrey; {
               agda-vim
               conjure
               aniseed
+              ats-vim
               # soydev langs
               vim-closetag
               coc-nvim
@@ -179,6 +177,8 @@ with palette.withGrey; {
 [user]
   email = "felix.lipski7@gmail.com";
   name = "felix-lipski";
+[includeIf "gitdir:~/code/sara/"]
+  path = ~/.gitconfig-sara
 [includeIf "gitdir:~/code/work/"]
   path = ~/.gitconfig-work
 [includeIf "gitdir:~/code/sara/"]
@@ -192,8 +192,8 @@ with palette.withGrey; {
               default-fg = white; 
             };
             extraConfig = ''
-              set recolor-lightcolor \${palette.withGrey.black}
-              set recolor-darkcolor \${palette.withGrey.white}
+              set recolor-lightcolor \${palette.black}
+              set recolor-darkcolor \${palette.white}
               set recolor
             '';
           };

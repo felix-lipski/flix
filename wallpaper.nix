@@ -6,7 +6,7 @@ pkgs.pkgs.stdenv.mkDerivation rec {
   dontUnpack = true;
   # pass in the third argument to color the logo
   buildPhase   = ''
-  ${inputs.auto-bg.defaultPackage."x86_64-linux"}/bin/gen_wall "${palette.dark.black}" ${./resources/logos/mew.png}
+  ${inputs.auto-bg.defaultPackage."x86_64-linux"}/bin/gen_wall "${palette.black}" ${./resources/logos/death-star.png}
     '';
   installPhase = ''
     mkdir -p $out

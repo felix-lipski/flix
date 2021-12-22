@@ -43,14 +43,14 @@
   fonts = {
     fonts = with pkgs; [
       terminus_font
-      unifont
+      # unifont
       fira-code
-      _3270font
-      mno16
-      fixedsys-excelsior
-      dejavu_fonts
-      mononoki
-      cozette
+      # _3270font
+      # mno16
+      # fixedsys-excelsior
+      # dejavu_fonts
+      # mononoki
+      # cozette
     ];
   };
 }
