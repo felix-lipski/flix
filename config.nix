@@ -24,6 +24,9 @@
       startx.enable = true;
       defaultSession = "none+xmonad";
     };
+    desktopManager = {
+      xfce.enable = true;
+    };
     xkbOptions = "caps:super";
   };
 
@@ -31,6 +34,7 @@
   
   sound.enable = true;
   hardware.pulseaudio.enable = true;
+  hardware.opengl.enable = true;
 
   environment.systemPackages = with pkgs; [
     wget vim git ping

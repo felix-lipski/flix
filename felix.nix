@@ -1,7 +1,20 @@
 { lib, pkgs, config, inputs, ... }:
 let
-  paletteVariant = "dark";
-  palette = config.ui.spacelix."${paletteVariant}";
+  sara_colors = {
+    foreground   = "#666666";
+    # foreground   = "#99a799";
+    middleground = "#adc2a9";
+    background   = "#fdefef";
+  };
+  palette_felix = config.ui.spacelix.dark;
+  paletteBase = palette_felix.dark // {
+    white = sara_colors.foreground;
+  };
+  palette_sara = rec {
+    dark     = paletteBase // { black = sara_colors.background; };
+    light    = paletteBase // { black = sara_colors.middleground; };
+    withGrey = dark // { grey = sara_colors.middleground; };
+  };
   font = "Terminus";
   utils = (import ./utils.nix) {lib=lib;};
   futhark-vim = pkgs.vimUtils.buildVimPlugin {
@@ -9,6 +22,9 @@ let
     src = inputs.futhark-vim;
   };
   wallpaper = (import ./wallpaper.nix) {inherit pkgs inputs palette;};
+
+  # change to palette_felix for dark mode
+  palette = palette_sara;
 in
 with palette.withGrey; {
   console.colors = map (lib.strings.removePrefix "#") ([
@@ -165,6 +181,8 @@ with palette.withGrey; {
   name = "felix-lipski";
 [includeIf "gitdir:~/code/work/"]
   path = ~/.gitconfig-work
+[includeIf "gitdir:~/code/sara/"]
+  path = ~/.gitconfig-sara
 '';
           };
           zathura = {
