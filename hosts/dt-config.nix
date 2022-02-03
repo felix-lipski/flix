@@ -33,7 +33,12 @@
     opencl-icd
     ocl-icd
     intel-ocl
+    vulkan-loader
+    vulkan-validation-layers
+    vulkan-headers
+    mesa
   ];
+  hardware.opengl.driSupport.enable = true;
 
   environment.systemPackages = with pkgs; [
     # support both 32- and 64-bit applications

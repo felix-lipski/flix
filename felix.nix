@@ -1,8 +1,8 @@
 { lib, pkgs, config, inputs, ... }:
 let
   spacelixVariant = "dark";
-  # palette = config.ui.spacelix."${spacelixVariant}".withGrey;
-  palette = import ./gruvbox.nix;
+  palette = config.ui.spacelix."${spacelixVariant}".withGrey;
+  # palette = import ./gruvbox.nix;
   font = "Terminus";
   utils = (import ./utils.nix) {lib=lib;};
   futhark-vim = pkgs.vimUtils.buildVimPlugin {
@@ -10,6 +10,11 @@ let
     src = inputs.futhark-vim;
   };
   wallpaper = (import ./wallpaper.nix) {inherit pkgs inputs palette;};
+
+  pkgs-unstable = import inputs.unstable {
+    config = { allowUnfree = true; };
+    system = "x86_64-linux";
+  };
 in
 with palette; {
   console.colors = map (lib.strings.removePrefix "#") ([
@@ -28,6 +33,32 @@ with palette; {
     useUserPackages = true;
     users = {
       felix = {
+	    home.packages = (with pkgs; [
+          haskellPackages.xmobar nitrogen scrot neofetch
+          gnumake gcc cmake direnv unzip ffmpeg
+          tmux ripgrep coreutils zip file xcape
+          dmenu lf sxiv vimv appimage-run
+          inputs.nix-boiler.defaultPackage."x86_64-linux"
+
+          cabal2nix cabal-install
+          haskellPackages.haskell-language-server ghcid
+          yarn nodejs
+          python3
+          slack
+          metals
+          racket
+          haskellPackages.shentong
+          lispPackages.quicklisp asdf sbcl gcl clisp
+          
+          (agda.withPackages [ agdaPackages.standard-library ])
+          libreoffice
+          pcsx2 
+        ] ++ (with pkgs.ocamlPackages; [
+          merlin utop ocp-indent dune_2 ocamlformat
+        ])) ++ (with pkgs-unstable; [
+          godot blender krita
+          brave mpv spotify
+        ]);
         home.file = {
           ".xinitrc".text = "exec xmonad";
           ".xmobarrc".text =
@@ -65,19 +96,6 @@ with palette; {
             corner-radius = 10;
           '';
         };
-	    home.packages = with pkgs; [
-          haskellPackages.xmobar nitrogen
-	      brave mpv
-          gnumake gcc cmake direnv unzip
-          tmux ripgrep coreutils
-          dmenu lf sxiv vimv
-          xcape
-          yarn
-          slack
-          cabal2nix cabal-install
-          (agda.withPackages [ agdaPackages.standard-library ])
-          inputs.nix-boiler.defaultPackage."x86_64-linux"
-	    ];
         programs = {
           alacritty = {
             enable = true;
@@ -114,7 +132,6 @@ with palette; {
               l        = "ls -la";
               v        = "nvim";
 	          m        = "make";
-              e        = "make edit";
 	          c        = "cd";
 	          g        = "git";
               x        = "exit";
@@ -126,59 +143,36 @@ with palette; {
               xc       = "xcape -e 'Super_L=Escape'";
               gcroots  = "nix-store --gc --print-roots | grep home/"; 
               forkterm = "alacritty & disown";
+              ssha     = "eval `ssh-agent`; ssh-add";
             };
             localVariables = {
               PROMPT = "%B%F{blue}%n%f %F{green}%~%f%b ";
               EDITOR = "nvim";
               F = "https://github.com/felix-lipski/";
-              # export PATH="$HOME/.npm-packages/bin:$PATH"
             };
             initExtra = lib.fileContents ./resources/zshrc;
           };
           neovim = {
             enable = true;
             plugins = with pkgs.vimPlugins; [ 
-              # general
-              gruvbox 
-	          nvim-treesitter
-              vim-commentary
-	          vim-css-color
-              goyo-vim
-              # misc langs
-              vim-glsl
-              # functional langs
-	          vim-nix
-              vim-ocaml
-              futhark-vim
-              haskell-vim
-              agda-vim
-              conjure
-              aniseed
-              ats-vim
-              # soydev langs
-              vim-closetag
-              coc-nvim
-            # coc-tsserver
-            # coc-eslint
-            # coc-tslint
-            # coc-snippets
-              coc-prettier
+	          nvim-treesitter vim-commentary vim-css-color goyo-vim vim-glsl vim-closetag coc-nvim coc-prettier
+
+	          vim-nix vim-ocaml futhark-vim haskell-vim agda-vim conjure aniseed ats-vim
             ];
             extraConfig = lib.fileContents ./resources/init.vim;
           };
           git = {
             enable = true;
-            # userEmail = "felix.lipski7@gmail.com";
-            # userName = "felix-lipski";
+            lfs.enable = true;
             extraConfig = ''
-[user]
-  email = "felix.lipski7@gmail.com";
-  name = "felix-lipski";
-[includeIf "gitdir:~/code/sara/"]
-  path = ~/.gitconfig-sara
-[includeIf "gitdir:~/code/work/"]
-  path = ~/.gitconfig-work
-'';
+              [user]
+                email = "felix.lipski7@gmail.com";
+                name = "felix-lipski";
+              [includeIf "gitdir:~/code/sara/"]
+                path = ~/.gitconfig-sara
+              [includeIf "gitdir:~/code/work/"]
+                path = ~/.gitconfig-work
+              '';
           };
           zathura = {
             enable = true;
@@ -192,71 +186,7 @@ with palette; {
               set recolor
             '';
           };
-          qutebrowser = {
-            enable = true;
-            settings = {
-              tabs.position = "left";
-              colors = {
-                tabs = {
-                  even = {bg = black; fg = grey;};
-                  odd = {bg = black; fg = grey;};
-                  selected.even = {bg = white; fg = black;};
-                  selected.odd = {bg = white; fg = black;};
-                  bar.bg = black;
-                  indicator = { stop = green; start = blue; error = red; };
-                };
-                downloads = {
-                  bar.bg = black;
-                  error.bg = red;
-                  stop.bg = green;
-                  start.bg = yellow;
-                };
-                statusbar = {
-                  caret   = { fg = white; bg = cyan;  };
-                  insert  = { fg = white; bg = green; };
-                  normal  = { fg = white; bg = black; };
-                  command = { fg = yellow; bg = black; };
-                  url.success = { http.fg = blue; https.fg = green; };
-                };
-                completion = {
-                  category = { bg = black; fg = white; border = { top = white; bottom = white; }; };
-                  item.selected = { bg = white; fg = black; match.fg = green; border = { top = white; bottom = white; }; };
-                  match.fg = green;
-                  even.bg = black;
-                  odd.bg = black;
-                  fg = [white white blue];
-                };
-                webpage.darkmode.enabled = true;
-                messages = {
-                  error   = { fg = black;  bg = red;   border = red; };
-                  info    = { fg = blue;   bg = black; border = blue; };
-                  warning = { fg = yellow; bg = black; border = yellow; };
-                };
-              };
-              fonts = let 
-                bold = "bold 14px 'terminus'"; 
-              in {
-                tabs.selected = bold;
-                tabs.unselected = bold;
-                downloads = bold;
-                statusbar = bold;
-                completion.category = bold;
-                completion.entry = bold;
-                messages.info = bold;
-                messages.error = bold;
-                messages.warning = bold;
-              };
-            };
-            searchEngines = {
-              g = "https://github.com/felix-lipski/{}";
-              y = "https://www.youtube.com/results?search_query={}";
-              n = "https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&type=packages&query={}";
-              w = "https://en.wikipedia.org/wiki/Special:Search?search={}&go=Go&ns0=1";
-              aw = "https://wiki.archlinux.org/?search={}";
-              nw = "https://nixos.wiki/index.php?search={}";
-              google = "https://www.google.com/search?hl=en&q={}";
-            };
-          };
+          qutebrowser = (import ./qute.nix) palette;
           vscode.enable = true;
         };
       };
