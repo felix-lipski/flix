@@ -5,7 +5,7 @@ hi clear
 
 let colors_name = "xelex"
 
-hi Normal guifg=Black guibg=white
+hi Normal term=bold guifg=Black guibg=white
 
 " Groups used in the 'highlight' and 'guicursor' options default value.
 hi ErrorMsg     term=standout   ctermbg=DarkRed ctermfg=White guibg=Red guifg=White

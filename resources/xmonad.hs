@@ -16,7 +16,7 @@ import qualified XMonad.StackSet as W
 
 myTerminal      = "alacritty"
 myModMask       = mod4Mask
-myBorderWidth   = 1
+myBorderWidth   = 2
 myNormalBorderColor  = "#grey"
 myFocusedBorderColor = "#white"
 

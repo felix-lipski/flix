@@ -34,6 +34,7 @@
   
   sound.enable = true;
   hardware.pulseaudio.enable = true;
+  hardware.opengl.enable = true;
 
   environment.systemPackages = with pkgs; [
     wget vim git ping
