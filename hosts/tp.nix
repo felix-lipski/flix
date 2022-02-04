@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [./tp-hardware.nix];
+  imports = [./hard/tp.nix];
 
   boot.loader.grub = {
     enable = true;

@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [./dt-hardware.nix];
+  imports = [./hard/dt.nix];
 
   services.xserver.videoDrivers = [ 
     "nvidia" 

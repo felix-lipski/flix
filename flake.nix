@@ -28,7 +28,6 @@
       nixosConfigurations = let
         overlays = [ 
           inputs.neovim-nightly-overlay.overlay 
-          # inputs.emacs-overlay.overlay 
           (import "${inputs.nixos-godot}/overlay.nix")
         ];
         base = {
@@ -42,37 +41,29 @@
           ];
         };
       in {
-        vm = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = base.modules ++ [ 
-            (import ./hosts/vm-config.nix)
-          ];
-          specialArgs = { inherit inputs; };
-        };
         tp = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = base.modules ++ [ 
-            (import ./hosts/tp-config.nix)
+            (import ./hosts/tp.nix)
           ];
           specialArgs = { inherit inputs; };
         };
         dt = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = base.modules ++ [ 
-            (import ./hosts/dt-config.nix)
+            (import ./hosts/dt.nix)
           ];
           specialArgs = { inherit inputs; };
         };
         p17 = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = base.modules ++ [ 
-            (import ./hosts/p17-config.nix)
+            (import ./hosts/p17.nix)
           ];
           specialArgs = { inherit inputs; };
         };
       };
   
-    vm = self.nixosConfigurations.vm.config.system.build.toplevel;
     tp = self.nixosConfigurations.tp.config.system.build.toplevel;
     dt = self.nixosConfigurations.dt.config.system.build.toplevel;
     p17 = self.nixosConfigurations.p17.config.system.build.toplevel;

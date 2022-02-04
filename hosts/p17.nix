@@ -7,7 +7,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./p17-hardware.nix
+      ./hard/p17.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
