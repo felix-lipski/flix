@@ -1,4 +1,4 @@
-palette: with palette; {
+palette: font: fontSize: with palette; {
   enable = true;
   settings = {
     tabs.position = "left";
@@ -40,7 +40,7 @@ palette: with palette; {
       };
     };
     fonts = let 
-      bold = "bold 14px 'terminus'"; 
+      bold = "bold ${builtins.toString fontSize}px '${font}'"; 
     in {
       tabs.selected = bold;
       tabs.unselected = bold;

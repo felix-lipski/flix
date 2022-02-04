@@ -1,9 +1,11 @@
 { lib, pkgs, config, inputs, ... }:
 let
-  spacelixVariant = "dark";
+  spacelixVariant = "sea";
   palette = config.ui.spacelix."${spacelixVariant}".withGrey;
   # palette = import ./gruvbox.nix;
-  font = "Terminus";
+  font = "Fira Code";
+  # font = "terminus";
+  fontSize = 16;
   utils = (import ./utils.nix) {lib=lib;};
   futhark-vim = pkgs.vimUtils.buildVimPlugin {
     name = "futhark-vim";
@@ -62,7 +64,7 @@ with palette; {
         home.file = {
           ".xinitrc".text = "exec xmonad";
           ".xmobarrc".text =
-          (utils.interpolateColors palette
+          (utils.interpolateColors (palette // { fontSize = (builtins.toString (fontSize - 4)); fontFace = font; })
             (builtins.readFile ./resources/xmobarrc.hs)
           );
           "wallpaper.png".source = ''${wallpaper}/wallpaper.png'';
@@ -81,7 +83,7 @@ with palette; {
           enable = true;
 	      enableContribAndExtras = true;
             config = pkgs.writeText "xmonad.hs" 
-              (utils.interpolateColors palette
+              (utils.interpolateColors (palette // { fontSize = (builtins.toString fontSize); fontFace = font; })
                 (builtins.readFile ./resources/xmonad.hs)
               );
 	      };
@@ -102,8 +104,9 @@ with palette; {
             settings = {
               shell.program = "zsh";
               font = {
-                size = 12;
+                # size = 12;
                 # size = 9;
+                size = fontSize - 4;
                 normal.family = font;
                 bold.family   = font;
                 italic.family = font;
@@ -186,7 +189,7 @@ with palette; {
               set recolor
             '';
           };
-          qutebrowser = (import ./qute.nix) palette;
+          qutebrowser = (import ./qute.nix) palette font fontSize;
           vscode.enable = true;
         };
       };

@@ -43,7 +43,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch a terminal
     [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
     -- launch dmenu
-    , ((modm,               xK_d     ), spawn "dmenu_run -fn Terminus:bold -nb '#black' -nf '#white' -sb '#green' -sf '#white'")
+    , ((modm,               xK_d     ), spawn "dmenu_run -fn \"#fontFace\":bold:pixelsize=#fontSize -nb '#black' -nf '#white' -sb '#green' -sf '#white'")
     -- launch browser
     , ((modm,               xK_s     ), spawn "qutebrowser")
     -- launch gmrun

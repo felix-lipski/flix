@@ -5,17 +5,17 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hard/p17.nix
-    ];
+  imports = [ ./hard/p17.nix ];
 
-  # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "p17"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking = {
+    hostName = "p17";
+    networkmanager.enable = true;
+  };
+
+  services.xserver.libinput.mouse.accelSpeed = "-0.5";
 
   # Set your time zone.
   # time.timeZone = "Europe/Amsterdam";
@@ -37,10 +37,6 @@
   #   font = "Lat2-Terminus16";
   #   keyMap = "us";
   # };
-
-  # Enable the X11 windowing system.
-  # services.xserver.enable = true;
-
 
   
 
@@ -64,15 +60,6 @@
   #   extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
   # };
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-# environment.systemPackages = with pkgs; [
-#   vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-#   wget
-#   git
-#   gnumake
-#   ping
-# ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
