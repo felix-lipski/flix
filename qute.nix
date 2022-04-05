@@ -1,4 +1,4 @@
-palette: with palette; {
+palette: font: fontSize: with palette; {
   enable = true;
   settings = {
     tabs.position = "left";
@@ -21,7 +21,7 @@ palette: with palette; {
         caret   = { fg = white; bg = cyan;  };
         insert  = { fg = white; bg = green; };
         normal  = { fg = white; bg = black; };
-        command = { fg = yellow; bg = black; };
+        command = { fg = green; bg = black; };
         url.success = { http.fg = blue; https.fg = green; };
       };
       completion = {
@@ -40,7 +40,7 @@ palette: with palette; {
       };
     };
     fonts = let 
-      bold = "bold 14px 'terminus'"; 
+      bold = "bold ${builtins.toString fontSize}px '${font}'"; 
     in {
       tabs.selected = bold;
       tabs.unselected = bold;

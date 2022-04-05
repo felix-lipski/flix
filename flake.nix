@@ -58,7 +58,7 @@
         p17 = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = base.modules ++ [ 
-            (import ./hosts/p17.nix)
+            ((import ./hosts/p17.nix) inputs)
           ];
           specialArgs = { inherit inputs; };
         };

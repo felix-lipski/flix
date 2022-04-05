@@ -3,7 +3,10 @@ let
   spacelixVariant = "dark";
   palette = config.ui.spacelix."${spacelixVariant}".withGrey;
   # palette = import ./gruvbox.nix;
+  # font = "Fira Code";
+  # fontSize = 16;
   font = "Terminus";
+  fontSize = 20;
   utils = (import ./utils.nix) {lib=lib;};
   futhark-vim = pkgs.vimUtils.buildVimPlugin {
     name = "futhark-vim";
@@ -24,7 +27,7 @@ with palette; {
   users.users.felix = {
     password = "n";
     isNormalUser = true;
-    extraGroups = [ "wheel" "audio" ];
+    extraGroups = [ "wheel" "audio" "docker" ];
   };
   nixpkgs.config.allowUnfree = true;
 
@@ -35,34 +38,36 @@ with palette; {
       felix = {
 	    home.packages = (with pkgs; [
           haskellPackages.xmobar nitrogen scrot neofetch
-          gnumake gcc cmake direnv unzip ffmpeg
+          gnumake gcc cmake unzip ffmpeg
+          # direnv
           tmux ripgrep coreutils zip file xcape
           dmenu lf sxiv vimv appimage-run
           inputs.nix-boiler.defaultPackage."x86_64-linux"
+          glxinfo opencl-info clinfo pciutils
 
           cabal2nix cabal-install
-          haskellPackages.haskell-language-server ghcid
+          haskellPackages.haskell-language-server ghcid ghc
           yarn nodejs
           python3
           slack
-          metals
           racket
-          haskellPackages.shentong
+          # haskellPackages.shentong
           lispPackages.quicklisp asdf sbcl gcl clisp
           
           (agda.withPackages [ agdaPackages.standard-library ])
           libreoffice
-          pcsx2 
+          pcsx2 krita
         ] ++ (with pkgs.ocamlPackages; [
           merlin utop ocp-indent dune_2 ocamlformat
         ])) ++ (with pkgs-unstable; [
-          godot blender krita
+          metals sbt
+          godot blender
           brave mpv spotify
         ]);
         home.file = {
           ".xinitrc".text = "exec xmonad";
           ".xmobarrc".text =
-          (utils.interpolateColors palette
+          (utils.interpolateColors (palette // { fontSize = (builtins.toString (fontSize - 4)); fontFace = font; })
             (builtins.readFile ./resources/xmobarrc.hs)
           );
           "wallpaper.png".source = ''${wallpaper}/wallpaper.png'';
@@ -73,15 +78,26 @@ with palette; {
               (builtins.readFile ./resources/doom-spacelix-theme.el)
             );
           ".agda".source = (import resources/agda-dir.nix) { inherit pkgs; };
+          # ".config/direnv/lib/use_flake.sh".text = ''
+# use_flake() {
+  # watch_file flake.nix
+  # watch_file flake.lock
+  # eval "$(nix print-dev-env --profile "$(direnv_layout_dir)/flake-profile")"
+# }
+          # '';
         };
-        home.sessionPath = [ "$HOME/.emacs.d/bin" ];
+        home.sessionPath = [
+          "$HOME/.emacs.d/bin" 
+          "$HOME/code/shen/shen-cl-v3.0.3-sources/bin/sbcl"
+        ];
+        
         xsession = {
           enable = true;
           windowManager.xmonad = {
           enable = true;
 	      enableContribAndExtras = true;
             config = pkgs.writeText "xmonad.hs" 
-              (utils.interpolateColors palette
+              (utils.interpolateColors (palette // { fontSize = (builtins.toString fontSize); fontFace = font; })
                 (builtins.readFile ./resources/xmonad.hs)
               );
 	      };
@@ -89,14 +105,24 @@ with palette; {
         services.lorri.enable = true;
         services.picom = {
           enable = true;
-          activeOpacity = "0.8";
-          inactiveOpacity = "0.8";
-          shadow = true;
+          activeOpacity = "0.5";
+          inactiveOpacity = "0.5";
+          # shadow = true;
           extraOptions = ''
             corner-radius = 10;
           '';
+          backend = "xrender";
         };
         programs = {
+          direnv.enable = true;
+          # direnv.nix-direnv.enable = true;
+          direnv.stdlib = ''
+use_flake() {
+  watch_file flake.nix
+  watch_file flake.lock
+  eval "$(nix print-dev-env --profile "$(direnv_layout_dir)/flake-profile")"
+}
+          '';
           alacritty = {
             enable = true;
             settings = {
@@ -104,6 +130,7 @@ with palette; {
               font = {
                 size = 12;
                 # size = 9;
+                # size = fontSize - 4;
                 normal.family = font;
                 bold.family   = font;
                 italic.family = font;
@@ -137,6 +164,7 @@ with palette; {
               x        = "exit";
               z        = "zathura";
               s        = "sxiv";
+              vv       = "nvim flake.nix";
 	          pgl      = "git log --pretty=oneline";
               nsh      = "nix develop --command zsh";
               nunfree  = "export NIXPKGS_ALLOW_UNFREE=1";
@@ -187,7 +215,7 @@ with palette; {
               set recolor
             '';
           };
-          qutebrowser = (import ./qute.nix) palette;
+          qutebrowser = (import ./qute.nix) palette font fontSize;
           vscode.enable = true;
         };
       };

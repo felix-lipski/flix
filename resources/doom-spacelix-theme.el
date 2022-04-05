@@ -240,10 +240,11 @@ background contrast. All other values default to \"medium\"."
    (org-todo :foreground green :bold 'inherit)
    (org-verbatim :foreground yellow)
    ;;;; rainbow-delimiters
-   (rainbow-delimiters-depth-1-face :foreground yellow)
-   (rainbow-delimiters-depth-2-face :foreground red)
+   (rainbow-delimiters-depth-1-face :foreground cyan)
+   (rainbow-delimiters-depth-2-face :foreground magenta)
    (rainbow-delimiters-depth-3-face :foreground yellow)
-   (rainbow-delimiters-depth-4-face :foreground red)
+   (rainbow-delimiters-depth-4-face :foreground green)
+   (rainbow-delimiters-depth-5-face :foreground blue)
    ;;;; show-paren <built-in>
    ((show-paren-match &override) :foreground nil :background base5 :bold t)
    ((show-paren-mismatch &override) :foreground nil :background "red")
