@@ -158,6 +158,7 @@ with palette; {
 	          nvim-treesitter vim-commentary vim-css-color goyo-vim vim-glsl vim-closetag coc-nvim coc-prettier
 
 	          vim-nix vim-ocaml futhark-vim haskell-vim agda-vim conjure aniseed ats-vim
+              nim-vim latex-box
             ];
             extraConfig = lib.fileContents ./resources/init.vim;
           };
