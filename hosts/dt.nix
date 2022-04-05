@@ -41,19 +41,8 @@
   hardware.opengl.driSupport.enable = true;
 
   environment.systemPackages = with pkgs; [
-    # support both 32- and 64-bit applications
-    wineWowPackages.stable
-    # support 32-bit only
-    wine
-    # support 64-bit only
-    (wine.override { wineBuild = "wine64"; })
-    # wine-staging (version with experimental features)
-    wineWowPackages.staging
-    # winetricks and other programs depending on wine need to use the same wine version
-    (winetricks.override { wine = wineWowPackages.staging; })
-
-    # wine-mono
-
+    wineWowPackages.stable wine (wine.override { wineBuild = "wine64"; }) 
+    wineWowPackages.staging (winetricks.override { wine = wineWowPackages.staging; })
     lutris
   ];
 

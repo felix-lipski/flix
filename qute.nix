@@ -21,7 +21,7 @@ palette: font: fontSize: with palette; {
         caret   = { fg = white; bg = cyan;  };
         insert  = { fg = white; bg = green; };
         normal  = { fg = white; bg = black; };
-        command = { fg = yellow; bg = black; };
+        command = { fg = green; bg = black; };
         url.success = { http.fg = blue; https.fg = green; };
       };
       completion = {
