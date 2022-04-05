@@ -36,7 +36,7 @@ langs = {
   "nix", "bash", "json", "yaml", "toml",
   "c", "cpp", "rust",
   "typescript", "javascript", "tsx", "python", 
-  "html", "css", "scss", "latex"
+  "html", "css", "scss"
 }
 require'nvim-treesitter.configs'.setup {
   ensure_installed = langs,
