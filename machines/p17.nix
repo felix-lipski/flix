@@ -2,41 +2,51 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-inputs: { config, pkgs, ... }:
-let
-  unstable_pkgs = import inputs.unstable {
-    config = { allowUnfree = true; };
-    system = "x86_64-linux";
-  };
-in
-{
+{ config, pkgs, ... }: {
   imports = [ ./hard/p17.nix ];
+  virtualisation.docker.enable = true;
+  environment.systemPackages = with pkgs; [ docker-compose ];
 
-  services.xserver.videoDrivers = [ 
-    # "intel" "nvidia" 
-    "intel"
-    "nvidia"
-  #   "nvidiaLegacy390"
-  #   "nvidiaLegacy340"
-  #   "nvidiaLegacy304"
-  #   "amdgpu-pro"
-  ];
-  # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
+  # hardware.opengl.driSupport = true;
+  # hardware.opengl.driSupport32Bit = true;
+  # hardware.opengl.enable = true;
+  # hardware.opengl.extraPackages = with pkgs; [
+  #   opencl-icd
+  #   opencl-headers
+  #   ocl-icd
+  #   # unstable_pkgs.intel-ocl
+  #   vulkan-loader
+  #   vulkan-validation-layers
+  #   vulkan-headers
+  #   mesa
+  # ];
+
+  # hardware.nvidia.modesetting.enable = true;
+  # services.xserver.videoDrivers = [ 
+  #   "intel"
+  #   "nvidia"
+  # ];
+
+  # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_390;
+
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
+  # boot.extraModulePackages = [
+  #   config.boot.kernelPackages.nvidia_x11
+  # ];
+  # boot.blacklistedKernelModules = ["nouveau"];
 
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.extraModulePackages = [
-    config.boot.kernelPackages.nvidia_x11
-  ];
-  boot.blacklistedKernelModules = ["nouveau"];
-
   networking = {
     hostName = "p17";
     networkmanager.enable = true;
+    extraHosts = ''
+      127.0.0.1	oauth-server
+      127.0.0.1	notification-server
+    '';
   };
 
   # services.xserver.libinput.mouse.accelSpeed = "-0.5";
@@ -44,22 +54,20 @@ in
   # hardware.trackpoint.sensitivity = 16;
   # hardware.trackpoint.speed = 10;
 
-  hardware.opengl.extraPackages = with pkgs; [
-    opencl-icd
-    opencl-headers
-    ocl-icd
-    # unstable_pkgs.intel-ocl
-    vulkan-loader
-    vulkan-validation-layers
-    vulkan-headers
-    mesa
-  ];
+  # hardware.opengl.extraPackages = with pkgs; [
+  #   opencl-icd
+  #   opencl-headers
+  #   ocl-icd
+  #   # unstable_pkgs.intel-ocl
+  #   vulkan-loader
+  #   vulkan-validation-layers
+  #   vulkan-headers
+  #   mesa
+  # ];
 
-  hardware.opengl.enable = true;
-  hardware.opengl.driSupport = true;
-  hardware.opengl.driSupport32Bit = true;
-  # hardware.opengl.driSupport.enable = true;
-  # hardware.opengl.driSupport32Bit.enable = true;
+  # hardware.opengl.enable = true;
+  # hardware.opengl.driSupport = true;
+  # hardware.opengl.driSupport32Bit = true;
 
   # Set your time zone.
   # time.timeZone = "Europe/Amsterdam";
@@ -131,6 +139,5 @@ in
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "21.11"; # Did you read the comment?
-
 }
 

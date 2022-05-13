@@ -30,6 +30,8 @@ color xelex
 " glsl highlight
 autocmd! BufNewFile,BufRead *.vs,*.fs set ft=glsl
 
+au BufRead,BufNewFile *.nim set filetype=nim
+
 " treesitter
 lua <<EOF
 langs = { 
