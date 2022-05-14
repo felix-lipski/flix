@@ -12,7 +12,8 @@ palette: lib: with palette; {
     z        = "zathura";
     s        = "sxiv";
     vv       = "nvim flake.nix";
-    pgl      = "git log --pretty=oneline";
+    gl       = "git log --pretty=oneline";
+    gs       = "git status";
     nsh      = "nix develop --command zsh";
     nunfree  = "export NIXPKGS_ALLOW_UNFREE=1";
     xc       = "xcape -e 'Super_L=Escape'";

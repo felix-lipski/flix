@@ -12,13 +12,14 @@
     {
       nixosConfigurations = let
         overlays = [ inputs.nvim-nightly.overlay ];
+        unstable = (import inputs.unstable) { config = { allowUnfree = true; }; system = "x86_64-linux"; };
         base = host: nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
+          specialArgs = { inherit inputs unstable; };
           modules = [
 	        { nixpkgs.overlays = overlays; }
             (import (./. + "/machines/${host}.nix"))
-            (import ./config.nix)
+            ((import ./config.nix) unstable)
             inputs.home-manager.nixosModules.home-manager
             inputs.spacelix.spacelix-module
           ];

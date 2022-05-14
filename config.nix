@@ -28,7 +28,9 @@
   hardware.pulseaudio.enable = true;
   hardware.opengl.enable = true;
 
-  environment.systemPackages = with pkgs; [ wget vim git ping ];
+  environment.systemPackages = with pkgs; [
+    inetutils pciutils coreutils udev file ripgrep lf vimv wget git vim tmux gnumake gcc cmake unzip zip  
+  ];
 
   fonts.fonts = with pkgs; [ terminus_font fira-code ];
 }
