@@ -1,7 +1,9 @@
 { lib, pkgs, config, inputs, unstable, ... }: let
-  spacelixVariant = "dark";
-  # palette = config.ui.spacelix."${spacelixVariant}".withGrey;
-  palette = import ./gruvbox.nix;
+  spacelixVariant = "slate";
+  spacelix = config.ui.spacelix."${spacelixVariant}".withGrey // {magenta = "#fe8019";};
+  gruvbox = import ./gruvbox.nix;
+  solarized = import ./solarized.nix;
+  palette = solarized // (with spacelix; {inherit black white grey;});
   fontConfig = rec {
     font = "Terminus";
     fontSize = 16;
@@ -16,9 +18,10 @@ in with palette; with fontConfig; {
   users.users.felix = {
     password = "n";
     isNormalUser = true;
-    extraGroups = [ "wheel" "audio" "docker" ];
+    extraGroups = [ "wheel" "audio" "docker" "networkmanager" "network" ];
   };
   nixpkgs.config.allowUnfree = true;
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -34,8 +37,11 @@ in with palette; with fontConfig; {
           appimage-run yarn nodejs python3
           (agda.withPackages [ agdaPackages.standard-library ])
           libreoffice krita gimp
+          spotify-cli-linux
+          pass 
         ]) ++ (with unstable; [
-          godot blender brave mpv spotify
+          godot blender brave mpv
+          firefox 
         ]);
         home.file = {
           ".xinitrc".text = "exec xmonad";
@@ -45,6 +51,7 @@ in with palette; with fontConfig; {
           );
           "wallpaper.png".source = ''${(import ./wallpaper.nix) {inherit pkgs inputs palette;}}/wallpaper.png'';
           ".config/nvim/colors/xelex.vim".source = resources/xelex.vim;
+          "help.md".source = resources/help.md;
           ".config/nvim/coc-settings.json".text = ''{"suggest.noselect": false}'';
           ".doom.d/themes/doom-spacelix-theme.el".text = 
             (utils.interpolateColors palette
@@ -56,6 +63,7 @@ in with palette; with fontConfig; {
           "$HOME/.emacs.d/bin" 
           "$HOME/code/shen/shen-cl-v3.0.3-sources/bin/sbcl"
         ];
+        home.keyboard.layout = "pl";
         xsession = {
           enable = true;
           windowManager.xmonad = {
@@ -67,6 +75,31 @@ in with palette; with fontConfig; {
               );
 	      };
 	    };
+        services.spotifyd = {
+          enable = true;
+          settings.global = {
+            username = "217mgssuzohnkwxlhrh3vvu6q";
+            password_cmd = "${pkgs.pass}/bin/pass spotify";
+            initial_volume = "70";
+          };
+        };
+        systemd.user.sessionVariables.DISPLAY = ":0";
+        systemd.user.services.xcape = {
+          Unit = {
+            Description= "Xcape Daemon";
+            After="graphical.target";
+          };
+          Service = {
+            Type="forking";
+            ExecStart = "${pkgs.xcape}/bin/xcape -f -e 'Super_L=Escape'";
+            Restart = "always";
+            RestartSec = 5;
+          };
+          Install = {
+            WantedBy=["default.target"];
+          };
+        };
+        services.emacs.enable = true;
         programs = (import ./programs.nix) palette font fontSize lib pkgs;
       };
     };

@@ -3,9 +3,7 @@
 {
   imports = [./hard/dt.nix];
 
-  services.xserver.videoDrivers = [ 
-    "nvidia" 
-  ];
+  services.xserver.videoDrivers = [ "nvidia" ];
   
   programs.steam.enable = true;
 
@@ -16,9 +14,7 @@
   };
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.extraModulePackages = [
-    config.boot.kernelPackages.nvidia_x11
-  ];
+  boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
 
   networking = {
     hostName = "dt";

@@ -5,33 +5,72 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Layout.Spacing
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.NoBorders
+import XMonad.Util.Scratchpad
+import XMonad.Util.NamedScratchpad
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+-- q - quit
+-- w - web
+-- e - emacs
+-- r - reload
+-- a - alacritty
+-- s - scrachpad
+-- d - dmenu
+-- f - 
+-- z - layout
+-- x - 
+-- c - 
+-- v - 
+-- ? - help
+
+scratchpads = [ 
+    NS "termscratchpad" "alacritty -t 'Scratchpad'" (title =? "Scratchpad") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
+    NS "help" "alacritty -t 'Help Pad' -e 'nvim' '-R' '/home/felix/help.md'" (title =? "Help Pad") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ]
+
 keyBindings :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 keyBindings conf@(XConfig {XMonad.modMask = modm}) = M.fromList $ [ 
-      ((modm, xK_comma), sendMessage Shrink)
-    , ((modm, xK_period), sendMessage Expand)
+      ((modm, xK_q), kill)
+    , ((modm, xK_w), spawn "qutebrowser")
+    , ((modm, xK_e), spawn "emacsclient -c -a 'emacs'")
+    , ((modm, xK_r), spawn "xmonad --restart")
+    , ((modm, xK_a), spawn $ XMonad.terminal conf)
+    , ((modm, xK_s), namedScratchpadAction scratchpads "termscratchpad")
+    , ((modm, xK_d), spawn dmenu)
+    , ((modm, xK_z), sendMessage NextLayout)
+    , ((modm, xK_slash), namedScratchpadAction scratchpads "help")
+
     , ((modm, xK_j), windows W.focusDown)
     , ((modm, xK_k), windows W.focusUp)
-    , ((modm, xK_q), kill)
-    , ((modm, xK_l), sendMessage NextLayout)
-    , ((modm, xK_s), spawn "qutebrowser")
+    , ((modm .|. shiftMask, xK_j), windows W.swapDown)
+    , ((modm .|. shiftMask, xK_k), windows W.swapUp)
+
     , ((modm, xK_m), windows $ W.greedyView "3")
     , ((modm, xK_space), windows $ \ssp -> 
         if W.currentTag ssp == "0" 
            then W.greedyView "1" ssp 
            else W.greedyView "0" ssp)
-    , ((modm, xK_Return), spawn $ XMonad.terminal conf)
-    , ((modm .|. shiftMask, xK_j), windows W.swapDown  )
-    , ((modm .|. shiftMask, xK_k), windows W.swapUp    )
-    , ((modm .|. shiftMask, xK_c), io (exitWith ExitSuccess))
-    , ((modm, xK_c), spawn "xmonad --restart")
-    , ((modm, xK_d), spawn 
-        "dmenu_run -fn \"#fontFace\":bold:pixelsize=#fontSize -nb '#black' -nf '#white' -sb '#green' -sf '#white'")
+    , ((modm .|. shiftMask, xK_q), io (exitWith ExitSuccess))
+    , ((modm, xK_comma), sendMessage Shrink)
+    , ((modm, xK_period), sendMessage Expand)
     ] ++ [((m .|. modm, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_u, xK_i, xK_o, xK_p]
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+
+myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
+    -- mod-button1, Set the window to floating mode and move by dragging
+    [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
+                                       >> windows W.shiftMaster))
+    -- mod-button2, Raise the window to the top of the stack
+    , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
+    -- mod-button3, Set the window to floating mode and resize by dragging
+    , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
+                                       >> windows W.shiftMaster))
+    -- you may also bind events to the mouse scroll wheel (button4 and button5)
+    ]
+
+
+dmenu = "dmenu_run -fn \"#fontFace\":bold:pixelsize=#fontSize -nb '#black' -nf '#white' -sb '#green' -sf '#white'"
 
 myLayout = avoidStruts (noBorders Full) ||| (spacingRaw False (Border 4 4 4 4) True (Border 4 4 4 4) True $ tiled) 
   where
@@ -41,16 +80,17 @@ main :: IO ()
 main = xmonad =<< statusBar "xmobar" myPP toggleStrutsKey defaults where
     toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
-myPP = xmobarPP {
-      ppCurrent = xmobarColor "#blue"   "" . showWorkspace
-    , ppVisible = xmobarColor "#yellow" "" . const "·"
-    , ppHidden  = xmobarColor "#white"  "" . const "·"
-    , ppUrgent  = xmobarColor "#red"    "" . const "!"
-    , ppTitle   = xmobarColor "#white"  "" . shorten 120
-    , ppHiddenNoWindows = xmobarColor "#grey" "" . const "·"
+myPP = namedScratchpadFilterOutWorkspacePP $ xmobarPP {
+      ppCurrent = xmobarColor "#blue"   ""          . showWorkspace
+    , ppVisible = xmobarColor "#yellow" ""          . const "·"
+    , ppHidden  = xmobarColor "#white"  ""          . const "·"
+    , ppHiddenNoWindows = xmobarColor "#grey" ""    . const "·"
+    , ppUrgent  = xmobarColor "#red"    ""          . const "!"
+    , ppTitle   = xmobarColor "#white"  "" . shorten 120            
     , ppSep     =  "<fc=#white>  </fc>"
     , ppWsSep   = "  "
-    , ppOrder   = \(ws:l:t:ex) -> [ws]++ex++[t]
+    , ppOrder   = \(ws:l:t:ex) -> [ws]++ex
+    -- , ppOrder   = \(ws:l:t:ex) -> [ws]++ex++[t]
     }
 
 showWorkspace :: String -> String
@@ -66,9 +106,9 @@ defaults = def {
     , normalBorderColor  = "#grey"
     , focusedBorderColor = "#white"
     , keys               = keyBindings
-    , mouseBindings      = const $ M.fromList []
+    , mouseBindings      = myMouseBindings
     , layoutHook         = myLayout
-    , manageHook         = fullscreenManageHook
+    , manageHook         = fullscreenManageHook <+> namedScratchpadManageHook scratchpads
     , handleEventHook    = fullscreenEventHook
     , logHook            = return ()
     , startupHook        = spawn "nitrogen --set-auto ~/wallpaper.png"

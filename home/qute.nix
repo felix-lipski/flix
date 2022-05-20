@@ -1,6 +1,7 @@
 palette: font: fontSize: with palette; {
   enable = true;
   settings = {
+    session.lazy_restore = true;
     tabs.position = "left";
     colors = {
       tabs = {

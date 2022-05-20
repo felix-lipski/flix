@@ -27,5 +27,6 @@ Config {
             , "--"
             , "-o"	        , "<left>% (<timeleft>)"
             , "-O"	        , "<fc=#yellow>Charging</fc>"
-            , "-i"	        , "<fc=#green>Charged</fc>" ] 50
-        , Run Date           "<fc=#blue>%F</fc>  %a  <fc=#green>%T</fc>" "date" 10 ] }
+            , "-i"	        , "" ] 50
+        , Run Date           "%T" "date" 10 ] }
+        -- , Run Date           "<fc=#blue>%F</fc>  %a  <fc=#green>%T</fc>" "date" 10 ] }

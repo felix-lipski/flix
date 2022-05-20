@@ -11,6 +11,7 @@
   nixpkgs.config.allowUnfree = true;
 
   services.xserver = {
+    layout = "pl";
     enable = true;
     displayManager = {
       startx.enable = true;
@@ -22,6 +23,9 @@
     xkbOptions = "caps:super";
   };
 
+  programs.gnupg.agent.enable = true;
+  programs.gnupg.agent.pinentryFlavor = "gtk2";
+
   nixpkgs.config.pulseaudio = true;
   
   sound.enable = true;
@@ -29,7 +33,10 @@
   hardware.opengl.enable = true;
 
   environment.systemPackages = with pkgs; [
-    inetutils pciutils coreutils udev file ripgrep lf vimv wget git vim tmux gnumake gcc cmake unzip zip  
+    inetutils pciutils coreutils udev
+    file ripgrep lf vimv wget unzip zip p7zip
+    git vim tmux gnumake gcc cmake
+    # gnupg pinentry
   ];
 
   fonts.fonts = with pkgs; [ terminus_font fira-code ];
