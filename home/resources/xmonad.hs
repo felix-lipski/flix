@@ -25,7 +25,7 @@ import qualified Data.Map        as M
 -- ? - help
 
 scratchpads = [ 
-    NS "termscratchpad" "alacritty -t 'Scratchpad'" (title =? "Scratchpad") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ,
+    NS "termscratchpad" "alacritty -t 'Scratchpad'" (title =? "Scratchpad") (customFloating $ W.RationalRect (1/2) (1/2) (1/2) (1/2)) ,
     NS "help" "alacritty -t 'Help Pad' -e 'nvim' '-R' '/home/felix/help.md'" (title =? "Help Pad") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ]
 
 keyBindings :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())

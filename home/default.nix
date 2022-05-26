@@ -1,9 +1,10 @@
-{ lib, pkgs, config, inputs, unstable, ... }: let
-  spacelixVariant = "slate";
+{ lib, pkgs, config, inputs, ... }: let
+  spacelixVariant = "sea";
   spacelix = config.ui.spacelix."${spacelixVariant}".withGrey // {magenta = "#fe8019";};
   gruvbox = import ./gruvbox.nix;
   solarized = import ./solarized.nix;
-  palette = solarized // (with spacelix; {inherit black white grey;});
+  # palette = solarized // (with spacelix; {inherit black white grey;});
+  palette = spacelix;
   fontConfig = rec {
     font = "Terminus";
     fontSize = 16;
@@ -16,7 +17,6 @@ in with palette; with fontConfig; {
     grey  red green yellow blue magenta cyan white
   ]);
   users.users.felix = {
-    password = "n";
     isNormalUser = true;
     extraGroups = [ "wheel" "audio" "docker" "networkmanager" "network" ];
   };
@@ -36,12 +36,12 @@ in with palette; with fontConfig; {
 
           appimage-run yarn nodejs python3
           (agda.withPackages [ agdaPackages.standard-library ])
-          libreoffice krita gimp
-          spotify-cli-linux
-          pass 
-        ]) ++ (with unstable; [
-          godot blender brave mpv
-          firefox 
+          libreoffice gimp
+          spotify-cli-linux pass 
+          godot blender brave mpv firefox 
+          signal-desktop
+
+          wineWowPackages.stagingFull winetricks lutris
         ]);
         home.file = {
           ".xinitrc".text = "exec xmonad";
@@ -75,14 +75,14 @@ in with palette; with fontConfig; {
               );
 	      };
 	    };
-        services.spotifyd = {
-          enable = true;
-          settings.global = {
-            username = "217mgssuzohnkwxlhrh3vvu6q";
-            password_cmd = "${pkgs.pass}/bin/pass spotify";
-            initial_volume = "70";
-          };
-        };
+        # services.spotifyd = {
+        #   enable = true;
+        #   settings.global = {
+        #     username = "217mgssuzohnkwxlhrh3vvu6q";
+        #     password_cmd = "${pkgs.pass}/bin/pass spotify";
+        #     initial_volume = "70";
+        #   };
+        # };
         systemd.user.sessionVariables.DISPLAY = ":0";
         systemd.user.services.xcape = {
           Unit = {
@@ -91,7 +91,7 @@ in with palette; with fontConfig; {
           };
           Service = {
             Type="forking";
-            ExecStart = "${pkgs.xcape}/bin/xcape -f -e 'Super_L=Escape'";
+            ExecStart = "${pkgs.xcape}/bin/xcape -e 'Super_L=Escape'";
             Restart = "always";
             RestartSec = 5;
           };

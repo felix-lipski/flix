@@ -1,4 +1,4 @@
-switch = sudo nixos-rebuild switch
+switch = sudo nixos-rebuild switch --use-remote-sudo
 
 main: pure
 

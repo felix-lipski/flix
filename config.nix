@@ -1,6 +1,13 @@
 { config, pkgs, ... }: {
   imports = [ ./home/default.nix ];
 
+  security.pam.services.pass.gnupg.enable = true;
+
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryFlavor = "gtk2";
+  };
+  
   nix = {
     package = pkgs.nixUnstable;
     extraOptions = "experimental-features = nix-command flakes";
@@ -23,17 +30,13 @@
     xkbOptions = "caps:super";
   };
 
-  programs.gnupg.agent.enable = true;
-  programs.gnupg.agent.pinentryFlavor = "gtk2";
-
-  nixpkgs.config.pulseaudio = true;
-  
   sound.enable = true;
   hardware.pulseaudio.enable = true;
   hardware.opengl.enable = true;
+  nixpkgs.config.pulseaudio = true;
 
   environment.systemPackages = with pkgs; [
-    inetutils pciutils coreutils udev
+    inetutils pciutils coreutils udev binutils
     file ripgrep lf vimv wget unzip zip p7zip
     git vim tmux gnumake gcc cmake
     # gnupg pinentry

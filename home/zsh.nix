@@ -27,4 +27,5 @@ palette: lib: with palette; {
     F = "https://github.com/felix-lipski/";
   };
   initExtra = lib.fileContents ./resources/zshrc;
+  history.path = "~/.config/zsh/zsh_history";
 }

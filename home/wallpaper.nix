@@ -7,8 +7,8 @@
   buildPhase = builtins.concatStringsSep " " [ 
     "${inputs.auto-bg.defaultPackage."x86_64-linux"}/bin/gen_wall"
     ''"${palette.black}"''
-    "${./resources/logos/nix.png}"
-    ''"${palette.grey}"''
+    "${./resources/logos/star-antlers-outlined.png}"
+    ''"${palette.blue}"''
   ];
   installPhase = ''
     mkdir -p $out
