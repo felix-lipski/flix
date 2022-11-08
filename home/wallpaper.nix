@@ -8,7 +8,7 @@
     "${inputs.auto-bg.defaultPackage."x86_64-linux"}/bin/gen_wall"
     ''"${palette.black}"''
     "${./resources/logos/star-antlers-outlined.png}"
-    ''"${palette.blue}"''
+    ''"${palette.grey}"''
   ];
   installPhase = ''
     mkdir -p $out

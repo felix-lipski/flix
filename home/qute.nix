@@ -1,6 +1,8 @@
 palette: font: fontSize: with palette; {
   enable = true;
   settings = {
+    # content.user_stylesheets = "~/flix/home/resources/qute-darkmode-stylesheet.css";
+    content.user_stylesheets = "~/flix/home/resources/drac.css";
     session.lazy_restore = true;
     tabs.position = "left";
     colors = {
@@ -55,12 +57,15 @@ palette: font: fontSize: with palette; {
     };
   };
   searchEngines = {
-    g = "https://github.com/felix-lipski/{}";
-    y = "https://www.youtube.com/results?search_query={}";
+    DEFAULT = "https://yandex.com/search/?text={}";
+    yd = "https://yandex.com/search/?text={}";
+    ddg = "https://duckduckgo.com/?q={}";
+    gh = "https://github.com/felix-lipski/{}";
+    yt = "https://www.youtube.com/results?search_query={}";
     n = "https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&type=packages&query={}";
-    w = "https://en.wikipedia.org/wiki/Special:Search?search={}&go=Go&ns0=1";
+    wi = "https://en.wikipedia.org/wiki/Special:Search?search={}&go=Go&ns0=1";
     aw = "https://wiki.archlinux.org/?search={}";
     nw = "https://nixos.wiki/index.php?search={}";
-    google = "https://www.google.com/search?hl=en&q={}";
+    gg = "https://www.google.com/search?hl=en&q={}";
   };
 }

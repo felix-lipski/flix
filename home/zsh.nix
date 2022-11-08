@@ -1,7 +1,9 @@
-palette: lib: with palette; {
+palette: lib: pkgs: with palette; {
   enable = true;
   dotDir = ".config/zsh";
-  shellAliases = {
+  shellAliases = let
+    findFlake = pkgs.writeShellScript "findFlake" ( lib.fileContents ./resources/find-flake.sh );
+  in {
     ls       = "ls --color";
     l        = "ls -la";
     v        = "nvim";
@@ -20,11 +22,19 @@ palette: lib: with palette; {
     gcroots  = "nix-store --gc --print-roots | grep home/"; 
     forkterm = "alacritty & disown";
     ssha     = "eval `ssh-agent`; ssh-add";
+    vm       = "v Makefile";
+    nlf      = "grep /nix/store/ /tmp/ech.log | awk '!x[$0]++' | rofi -dmenu | xargs lf";
+    "1"      = "nvim -c':e#<1'";
+    "2"      = "nvim -c':e#<2'";
+    "3"      = "nvim -c':e#<3'";
+    foo      = "${findFlake} | xargs nvim";
   };
   localVariables = {
     PROMPT = "%B%F{blue}%n%f %F{green}%~%f%b ";
     EDITOR = "nvim";
     F = "https://github.com/felix-lipski/";
+    THEME_BG = palette.black;
+    THEME_FG = palette.white;
   };
   initExtra = lib.fileContents ./resources/zshrc;
   history.path = "~/.config/zsh/zsh_history";

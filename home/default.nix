@@ -1,12 +1,15 @@
 { lib, pkgs, config, inputs, ... }: let
-  spacelixVariant = "sea";
-  spacelix = config.ui.spacelix."${spacelixVariant}".withGrey // {magenta = "#fe8019";};
+  spacelixVariant = "dark";
+  # spacelix = config.ui.spacelix."${spacelixVariant}".withGrey // {magenta = "#fe8019";};
+  # spacelix = config.ui.spacelix."${spacelixVariant}".withGrey // {magenta = "#e06500"; white = "#dff6f5";};
+  spacelix = config.ui.spacelix."${spacelixVariant}".withGrey // {magenta = "#e06500"; white = "#f5f5df"; black = "#121c2a";};
   gruvbox = import ./gruvbox.nix;
   solarized = import ./solarized.nix;
   # palette = solarized // (with spacelix; {inherit black white grey;});
   palette = spacelix;
   fontConfig = rec {
     font = "Terminus";
+    # font = "Fixed";
     fontSize = 16;
     fontSizeSmall = 12;
   };
@@ -18,7 +21,7 @@ in with palette; with fontConfig; {
   ]);
   users.users.felix = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "audio" "docker" "networkmanager" "network" ];
+    extraGroups = [ "wheel" "audio" "docker" "networkmanager" "network" "pipewire" ];
   };
   nixpkgs.config.allowUnfree = true;
 
@@ -28,8 +31,9 @@ in with palette; with fontConfig; {
     users = {
       felix = {
         home.packages = (with pkgs; [
-          haskellPackages.xmobar nitrogen scrot neofetch ffmpeg xcape dmenu sxiv 
+          haskellPackages.xmobar nitrogen scrot ffmpeg xcape dmenu sxiv 
           glxinfo opencl-info clinfo
+          binutils
 
           cabal2nix cabal-install haskellPackages.haskell-language-server ghcid
           (pkgs.haskellPackages.ghcWithPackages (pkgs: with pkgs; [ xmonad xmonad-contrib xmonad-extras ]))
@@ -39,9 +43,16 @@ in with palette; with fontConfig; {
           libreoffice gimp
           spotify-cli-linux pass 
           godot blender brave mpv firefox 
-          signal-desktop
+          signal-desktop slack
 
           wineWowPackages.stagingFull winetricks lutris
+
+          pipes cbonsai htop zenith neofetch pfetch
+          (writeScriptBin "ech" ''
+            echo $1
+            echo $1 >> /tmp/ech.log
+          '')
+          mutt-wizard neomutt
         ]);
         home.file = {
           ".xinitrc".text = "exec xmonad";
@@ -49,7 +60,8 @@ in with palette; with fontConfig; {
           (utils.interpolateColors (palette // { fontSize = (builtins.toString (fontSizeSmall)); fontFace = font; })
             (builtins.readFile ./resources/xmobarrc.hs)
           );
-          "wallpaper.png".source = ''${(import ./wallpaper.nix) {inherit pkgs inputs palette;}}/wallpaper.png'';
+          # "wallpaper.png".source = ''${(import ./wallpaper.nix) {inherit pkgs inputs palette;}}/wallpaper.png'';
+          "wallpaper.png".source = resources/pixel-wall.png;
           ".config/nvim/colors/xelex.vim".source = resources/xelex.vim;
           "help.md".source = resources/help.md;
           ".config/nvim/coc-settings.json".text = ''{"suggest.noselect": false}'';
@@ -58,6 +70,10 @@ in with palette; with fontConfig; {
               (builtins.readFile ./resources/doom-spacelix-theme.el)
             );
           ".agda".source = (import resources/agda-dir.nix) { inherit pkgs; };
+          ".vscode/extensions/felix-lipski.spacelix-1.0.0/theme.json".text =
+            (utils.interpolateColors palette
+              (builtins.readFile ./resources/vsc-theme.json)
+            );
         };
         home.sessionPath = [
           "$HOME/.emacs.d/bin" 
@@ -83,6 +99,10 @@ in with palette; with fontConfig; {
         #     initial_volume = "70";
         #   };
         # };
+        services.picom = {
+          enable = true;
+          shadow = true;
+        };
         systemd.user.sessionVariables.DISPLAY = ":0";
         systemd.user.services.xcape = {
           Unit = {
@@ -100,7 +120,7 @@ in with palette; with fontConfig; {
           };
         };
         services.emacs.enable = true;
-        programs = (import ./programs.nix) palette font fontSize lib pkgs;
+        programs = (import ./programs.nix) palette font fontSize lib pkgs config;
       };
     };
   };

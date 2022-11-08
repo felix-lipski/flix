@@ -1,4 +1,4 @@
-palette: font: fontSize: lib: pkgs: with palette; {
+palette: font: fontSize: lib: pkgs: config: with palette; {
   direnv.enable = true;
   direnv.stdlib = ''
     use_flake() {
@@ -11,7 +11,11 @@ palette: font: fontSize: lib: pkgs: with palette; {
     enable = true;
     plugins = with pkgs.vimPlugins; [ 
       nvim-treesitter vim-commentary vim-css-color goyo-vim vim-glsl vim-closetag coc-nvim coc-prettier
-      vim-nix vim-ocaml haskell-vim agda-vim conjure aniseed ats-vim latex-box futhark-vim
+      vim-nix vim-ocaml  agda-vim conjure aniseed ats-vim latex-box futhark-vim
+      purescript-vim dhall-vim vim-liquid
+      nerdtree
+      zen-mode-nvim
+# haskell-vim
     ];
     extraConfig = lib.fileContents ./resources/init.vim;
   };
@@ -38,10 +42,44 @@ palette: font: fontSize: lib: pkgs: with palette; {
       set recolor-lightcolor \${palette.black}
       set recolor-darkcolor \${palette.white}
       set recolor
+      set recolor-keephue
+      set guioptions none
     '';
   };
+  rofi =
+    let 
+      mkLiteral = value: {
+        _type = "literal";
+        inherit value;
+      }; 
+    in {
+      enable = true;
+      font = "Terminus 12";
+      theme = {
+        "*" = {
+          background-color = mkLiteral black;
+          foreground-color = mkLiteral white;
+          text-color = mkLiteral white;
+          highlight = mkLiteral ("underline bold " + green);
+        };
+        "window" = {
+          border = 1;
+          border-color = mkLiteral white;
+          padding = 2;
+        };
+        "prompt" = {
+          margin = mkLiteral "0px 10px 0px 10px";
+        };
+      };
+  };
+  lf = {
+    enable = true;
+    commands = {
+      open = lib.fileContents ./resources/lfopen;
+    };
+  };
   alacritty = (import ./alacritty.nix) palette font;
-  zsh = (import ./zsh.nix) palette lib;
+  zsh = (import ./zsh.nix) palette lib pkgs;
   qutebrowser = (import ./qute.nix) palette font fontSize;
   vscode.enable = true;
 }

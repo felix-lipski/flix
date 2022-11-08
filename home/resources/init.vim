@@ -32,13 +32,19 @@ autocmd! BufNewFile,BufRead *.vs,*.fs set ft=glsl
 
 au BufRead,BufNewFile *.nim set filetype=nim
 
+au BufRead,BufNewFile *.carp set filetype=carp
+
+let g:syntastic_carp_checkers = ['carp']
+
 " treesitter
 lua <<EOF
 langs = { 
-  "nix", "bash", "json", "yaml", "toml",
-  "c", "cpp", "rust",
+  "nix", "json", "yaml", "toml",
+  "rust", "c", "cpp",
   "typescript", "javascript", "tsx", "python", 
-  "html", "css", "scss"
+  "html",
+  "haskell",
+  "rust"
 }
 require'nvim-treesitter.configs'.setup {
   ensure_installed = langs,

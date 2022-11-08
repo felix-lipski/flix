@@ -10,23 +10,9 @@ import XMonad.Util.NamedScratchpad
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
--- q - quit
--- w - web
--- e - emacs
--- r - reload
--- a - alacritty
--- s - scrachpad
--- d - dmenu
--- f - 
--- z - layout
--- x - 
--- c - 
--- v - 
--- ? - help
-
 scratchpads = [ 
-    NS "termscratchpad" "alacritty -t 'Scratchpad'" (title =? "Scratchpad") (customFloating $ W.RationalRect (1/2) (1/2) (1/2) (1/2)) ,
-    NS "help" "alacritty -t 'Help Pad' -e 'nvim' '-R' '/home/felix/help.md'" (title =? "Help Pad") (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)) ]
+    NS "termscratchpad" "alacritty -t 'Scratchpad'" (title =? "Scratchpad") (customFloating $ W.RationalRect (2/3) (1/2) (11/36) (7/16)) ,
+    NS "help" "alacritty -t 'Help Pad' -e 'nvim' '-R' '/home/felix/help.md'" (title =? "Help Pad") (customFloating $ W.RationalRect (2/7) (1/6) (3/7) (1/3)) ]
 
 keyBindings :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 keyBindings conf@(XConfig {XMonad.modMask = modm}) = M.fromList $ [ 
@@ -38,6 +24,8 @@ keyBindings conf@(XConfig {XMonad.modMask = modm}) = M.fromList $ [
     , ((modm, xK_s), namedScratchpadAction scratchpads "termscratchpad")
     , ((modm, xK_d), spawn dmenu)
     , ((modm, xK_z), sendMessage NextLayout)
+    , ((modm, xK_c), spawn "scrot")
+    , ((modm .|. shiftMask, xK_c), spawn "scrot -s")
     , ((modm, xK_slash), namedScratchpadAction scratchpads "help")
 
     , ((modm, xK_j), windows W.focusDown)
@@ -77,13 +65,27 @@ myLayout = avoidStruts (noBorders Full) ||| (spacingRaw False (Border 4 4 4 4) T
      tiled = Tall 1 (3/100) (1/2)
 
 main :: IO ()
+-- main = xmonad =<< statusBar "while read line; do echo $line >> /tmp/bar.log; done" myPP toggleStrutsKey defaults where
+--     toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 main = xmonad =<< statusBar "xmobar" myPP toggleStrutsKey defaults where
     toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
+-- myPP = namedScratchpadFilterOutWorkspacePP $ xmobarPP {
+--       ppCurrent = showWorkspace
+--     , ppVisible = const "·"
+--     , ppHidden  = const "·"
+--     , ppHiddenNoWindows = xmobarColor "#grey" ""    . const "·"
+--     , ppUrgent  = xmobarColor "#red"    ""          . const "!"
+--     , ppTitle   = xmobarColor "#white"  "" . shorten 120            
+--     , ppSep     =  "<fc=#white>  </fc>"
+--     , ppWsSep   = "  "
+--     , ppOrder   = \(ws:l:t:ex) -> [ws]++ex
+--     -- , ppOrder   = \(ws:l:t:ex) -> [ws]++ex++[t]
+--     }
 myPP = namedScratchpadFilterOutWorkspacePP $ xmobarPP {
-      ppCurrent = xmobarColor "#blue"   ""          . showWorkspace
+      ppCurrent = xmobarColor "#green"   ""          . showWorkspace
     , ppVisible = xmobarColor "#yellow" ""          . const "·"
-    , ppHidden  = xmobarColor "#white"  ""          . const "·"
+    , ppHidden  = xmobarColor "#cyan"  ""          . const "·"
     , ppHiddenNoWindows = xmobarColor "#grey" ""    . const "·"
     , ppUrgent  = xmobarColor "#red"    ""          . const "!"
     , ppTitle   = xmobarColor "#white"  "" . shorten 120            
@@ -94,7 +96,8 @@ myPP = namedScratchpadFilterOutWorkspacePP $ xmobarPP {
     }
 
 showWorkspace :: String -> String
-showWorkspace i = ["α", "β", "τ", "μ"] !! (read i)
+showWorkspace i = ["∅", "≡", "∀", "∓"] !! (read i)
+-- showWorkspace i = ["α", "β", "τ", "μ"] !! (read i)
 
 defaults = def {
       terminal           = "alacritty"

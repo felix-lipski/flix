@@ -23,8 +23,32 @@
       fsType = "vfat";
     };
 
+  fileSystems."/mnt/win-hdd" =
+    { device = "/dev/disk/by-uuid/C22C2EC22C2EB0F9";
+      fsType = "ntfs";
+      # options = [ "exec" ];
+    };
+
+# :
+  fileSystems."/mnt/win-ssd" =
+    { device = "/dev/disk/by-uuid/6EAA1ECCAA1E9127";
+      fsType = "ntfs";
+      # options = [ "exec" ];
+    };
+# :
+
   swapDevices =
     [ { device = "/dev/disk/by-uuid/666d3b0d-ef6a-420d-838f-13566e7ed61c"; }
     ];
 
+  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
+  # (the default) this is the recommended approach. When using systemd-networkd it's
+  # still possible to use this option, but it's recommended to use it in conjunction
+  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
+  networking.useDHCP = lib.mkDefault true;
+  # networking.interfaces.enp3s0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.wlp0s20u3.useDHCP = lib.mkDefault true;
+  # networking.interfaces.wlp5s1.useDHCP = lib.mkDefault true;
+
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
