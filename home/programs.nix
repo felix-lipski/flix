@@ -22,15 +22,27 @@ palette: font: fontSize: lib: pkgs: config: with palette; {
   git = {
     enable = true;
     lfs.enable = true;
-    extraConfig = ''
-      [user]
+    extraConfig = {
+      "user" = {
         email = "felix.lipski7@gmail.com";
         name = "felix-lipski";
-      [includeIf "gitdir:~/code/sara/"]
-        path = ~/.gitconfig-sara
-      [includeIf "gitdir:~/code/work/"]
-        path = ~/.gitconfig-work
-      '';
+      };
+      "includeIf \"gitdir:~/code/sara/\"" = {
+        path = "~/.gitconfig-sara";
+      };
+      "includeIf \"gitdir:~/code/work/\"" = {
+        path = "~/.gitconfig-work";
+      };
+    };
+    # extraConfig = ''
+    #   [user]
+    #     email = "felix.lipski7@gmail.com";
+    #     name = "felix-lipski";
+    #   [includeIf "gitdir:~/code/sara/"]
+    #     path = ~/.gitconfig-sara
+    #   [includeIf "gitdir:~/code/work/"]
+    #     path = ~/.gitconfig-work
+    #   '';
   };
   zathura = {
     enable = true;

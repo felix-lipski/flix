@@ -1,14 +1,19 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, inputs, ... }: let
+# pinnedKernelPackages = inputs.nixpkgs.linuxPackages_latest;
+# pinnedKernelPackages = inputs.nixpkgs.legacyPackages.x86_64-linux.linuxPackages_latest;
+  # pinnedKernelPackages = pkgs.old.linuxPackages_latest;
+in {
   imports = [ ./home/default.nix ];
 
   networking.wireless.athUserRegulatoryDomain = true;
+  # networking.wireless.enable = false;
 
   virtualisation.docker.enable = true;
   networking.wireguard.enable = true;
   programs.ssh.startAgent = true;
   
-  networking.extraHosts = ''
-  '';
+  # networking.extraHosts = ''
+  # '';
   # 127.0.0.1 youtube.com
   # ::1 youtube.com
   # 127.0.0.1 www.youtube.com
@@ -38,11 +43,20 @@
   nix = {
     package = pkgs.nixUnstable;
     extraOptions = "experimental-features = nix-command flakes";
-    binaryCachePublicKeys = [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];
-    binaryCaches = [ "https://hydra.iohk.io" ];
+    # binaryCachePublicKeys = [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];
+    # binaryCaches = [ "https://hydra.iohk.io" ];
+    settings.trusted-public-keys = [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];
+    settings.substituters = [ "https://hydra.iohk.io" ];
   };
 
   nixpkgs.config.allowUnfree = true;
+  # nixpkgs.config.packageOverrides = pkgs: {
+  #   linuxPackages_latest = pinnedKernelPackages;
+  #   # nvidia_x11 = inputs.nixpkgs.nvidia_x11;
+  #   nvidia_x11 = pkgs.old.nvidia_x11;
+  # };
+  # boot.kernel
+
 
   services.xserver = {
     layout = "pl";
