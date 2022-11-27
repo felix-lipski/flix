@@ -9,10 +9,13 @@ import XMonad.Util.Scratchpad
 import XMonad.Util.NamedScratchpad
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
+import XMonad.Actions.FloatKeys  as FK
 
 scratchpads = [ 
     NS "termscratchpad" "alacritty -t 'Scratchpad'" (title =? "Scratchpad") (customFloating $ W.RationalRect (2/3) (1/2) (11/36) (7/16)) ,
-    NS "help" "alacritty -t 'Help Pad' -e 'nvim' '-R' '/home/felix/help.md'" (title =? "Help Pad") (customFloating $ W.RationalRect (2/7) (1/6) (3/7) (1/3)) ]
+    -- NS "dyn1" "alacritty -t 'dyn1'" (title =? "dyn1") (customFloating $ W.RationalRect (2/3) (1/2) (11/36) (7/16)) ,
+    NS "help" "alacritty -t 'Help Pad' -e 'nvim' '-R' '/home/felix/help.md'" (title =? "Help Pad") (customFloating $ W.RationalRect (2/7) (1/6) (3/7) (1/3))
+    ]
 
 keyBindings :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 keyBindings conf@(XConfig {XMonad.modMask = modm}) = M.fromList $ [ 
@@ -23,6 +26,19 @@ keyBindings conf@(XConfig {XMonad.modMask = modm}) = M.fromList $ [
     , ((modm, xK_a), spawn $ XMonad.terminal conf)
     , ((modm, xK_s), namedScratchpadAction scratchpads "termscratchpad")
     , ((modm, xK_d), spawn dmenu)
+
+    , ((modm, xK_f), withFocused $ toggleDynamicNSP "dyn1")
+    , ((modm, xK_t), dynamicNSPAction "dyn1")
+    , ((modm, xK_y), withFocused $ \w -> do
+        float w
+        FK.keysMoveWindowTo (512,384) (1/2, 1/2) w
+        )
+    -- , ((modm, xK_y), withFocused $ \w -> do
+    --         runQuery (customFloating $ W.RationalRect (2/3) (1/2) (11/36) (7/16)) w
+    --         return ())
+    -- , ((modm, xK_y), withFocused $ runQuery $ customFloating $ W.RationalRect (2/3) (1/2) (11/36) (7/16))
+    -- , ((modm, xK_y), doRectFloat  $ W.RationalRect (2/3) (1/2) (11/36) (7/16))
+
     , ((modm, xK_z), sendMessage NextLayout)
     , ((modm, xK_c), spawn "scrot")
     , ((modm .|. shiftMask, xK_c), spawn "scrot -s")
@@ -96,8 +112,10 @@ myPP = namedScratchpadFilterOutWorkspacePP $ xmobarPP {
     }
 
 showWorkspace :: String -> String
-showWorkspace i = ["∅", "≡", "∀", "∓"] !! (read i)
--- showWorkspace i = ["α", "β", "τ", "μ"] !! (read i)
+showWorkspace i = ["↨", "₧", "₮", "ℵ"] !! (read i)
+-- ✔ ♠ ♣ ♥ ♦ ⢯ ☼ ♀ ♂ ♪ ♫ ✓ † α β τ μ ∅ ≡ ∀ ∓ ℵ
+-- ← ↑ → ↓ ↔ ↕ ↤ ↦ ↨ ↵ ↻ ⇋ ⇌ ⇐ ⇑ ⇒ ⇓ ⇔ ⇕ ∀ ∃ ∄ ∅ ∆ ∇ ∈ ∉ ∊ ∋ ∌ ∍
+-- ₧ € ₮ ℂ ℎ ℏ ℕ № ℚ ℝ ™ ℤ Ω
 
 defaults = def {
       terminal           = "alacritty"

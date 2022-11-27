@@ -1,8 +1,7 @@
-palette: font: fontSize: with palette; {
+utils: pkgs: palette: font: fontSize: with palette; {
   enable = true;
   settings = {
-    # content.user_stylesheets = "~/flix/home/resources/qute-darkmode-stylesheet.css";
-    content.user_stylesheets = "~/flix/home/resources/drac.css";
+    content.user_stylesheets = ''${(import ./theme/default.nix) {inherit pkgs palette;}}/qute.css'';
     session.lazy_restore = true;
     tabs.position = "left";
     colors = {
@@ -67,5 +66,7 @@ palette: font: fontSize: with palette; {
     aw = "https://wiki.archlinux.org/?search={}";
     nw = "https://nixos.wiki/index.php?search={}";
     gg = "https://www.google.com/search?hl=en&q={}";
+    hg = "https://hoogle.haskell.org/?hoogle={}";
+    h = "https://hoogle.haskell.org/?hoogle={}";
   };
 }

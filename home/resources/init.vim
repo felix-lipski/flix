@@ -36,6 +36,10 @@ au BufRead,BufNewFile *.carp set filetype=carp
 
 let g:syntastic_carp_checkers = ['carp']
 
+" coc accept on enter
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
 "" treesitter
 "lua <<EOF
 "langs = { 

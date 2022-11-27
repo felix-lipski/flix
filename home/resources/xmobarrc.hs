@@ -1,6 +1,5 @@
 Config { 
      font               = "#fontFace Bold #fontSize"
-     -- font               = "xft:#fontFace:size=#fontSize:bold:antialias=false"
    , bgColor            = "#black"
    , fgColor            = "#white"
    , position           = Top

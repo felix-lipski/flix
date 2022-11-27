@@ -1,4 +1,4 @@
-palette: font: fontSize: lib: pkgs: config: with palette; {
+utils: palette: font: fontSize: lib: pkgs: config: with palette; {
   direnv.enable = true;
   direnv.stdlib = ''
     use_flake() {
@@ -15,7 +15,7 @@ palette: font: fontSize: lib: pkgs: config: with palette; {
       purescript-vim dhall-vim vim-liquid
       nerdtree
       zen-mode-nvim
-# haskell-vim
+      haskell-vim
     ];
     extraConfig = lib.fileContents ./resources/init.vim;
   };
@@ -34,15 +34,6 @@ palette: font: fontSize: lib: pkgs: config: with palette; {
         path = "~/.gitconfig-work";
       };
     };
-    # extraConfig = ''
-    #   [user]
-    #     email = "felix.lipski7@gmail.com";
-    #     name = "felix-lipski";
-    #   [includeIf "gitdir:~/code/sara/"]
-    #     path = ~/.gitconfig-sara
-    #   [includeIf "gitdir:~/code/work/"]
-    #     path = ~/.gitconfig-work
-    #   '';
   };
   zathura = {
     enable = true;
@@ -92,6 +83,6 @@ palette: font: fontSize: lib: pkgs: config: with palette; {
   };
   alacritty = (import ./alacritty.nix) palette font;
   zsh = (import ./zsh.nix) palette lib pkgs;
-  qutebrowser = (import ./qute.nix) palette font fontSize;
+  qutebrowser = (import ./qute.nix) utils pkgs palette font fontSize;
   vscode.enable = true;
 }

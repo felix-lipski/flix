@@ -14,7 +14,7 @@ palette: font: with palette; {
         background = black;
         foreground = white;
       };
-      normal = { inherit black red green yellow blue magenta cyan white; };
+      normal = { inherit black red green yellow blue cyan white; magenta = orange; };
       dim    = normal;
       bright = normal // { black = grey; };
     };

@@ -1,15 +1,13 @@
 { lib, pkgs, config, inputs, ... }: let
   spacelixVariant = "dark";
-  # spacelix = config.ui.spacelix."${spacelixVariant}".withGrey // {magenta = "#fe8019";};
-  # spacelix = config.ui.spacelix."${spacelixVariant}".withGrey // {magenta = "#e06500"; white = "#dff6f5";};
-  spacelix = config.ui.spacelix."${spacelixVariant}".withGrey // {magenta = "#e06500"; white = "#f5f5df"; black = "#121c2a";};
-  gruvbox = import ./gruvbox.nix;
-  solarized = import ./solarized.nix;
+  gruvbox   = import ./palettes/gruvbox.nix;
+  solarized = import ./palettes/solarized.nix;
+  spacelix  = import ./palettes/spacelix.nix;
   # palette = solarized // (with spacelix; {inherit black white grey;});
   palette = spacelix;
+  theme = (import ./theme/default.nix) {inherit pkgs palette;};
   fontConfig = rec {
     font = "Terminus";
-    # font = "Fixed";
     fontSize = 16;
     fontSizeSmall = 12;
   };
@@ -60,20 +58,13 @@ in with palette; with fontConfig; {
           (utils.interpolateColors (palette // { fontSize = (builtins.toString (fontSizeSmall)); fontFace = font; })
             (builtins.readFile ./resources/xmobarrc.hs)
           );
-          # "wallpaper.png".source = ''${(import ./wallpaper.nix) {inherit pkgs inputs palette;}}/wallpaper.png'';
-          "wallpaper.png".source = resources/pixel-wall.png;
-          ".config/nvim/colors/xelex.vim".source = resources/xelex.vim;
           "help.md".source = resources/help.md;
           ".config/nvim/coc-settings.json".text = ''{"suggest.noselect": false}'';
-          ".doom.d/themes/doom-spacelix-theme.el".text = 
-            (utils.interpolateColors palette
-              (builtins.readFile ./resources/doom-spacelix-theme.el)
-            );
           ".agda".source = (import resources/agda-dir.nix) { inherit pkgs; };
-          ".vscode/extensions/felix-lipski.spacelix-1.0.0/theme.json".text =
-            (utils.interpolateColors palette
-              (builtins.readFile ./resources/vsc-theme.json)
-            );
+          ".config/nvim/colors/xelex.vim".source = resources/xelex.vim;
+          "wallpaper.png".source = ''${theme}/wallpaper.png'';
+          ".doom.d/themes/doom-spacelix-theme.el".source = ''${theme}/doom.el'';
+          ".vscode/extensions/felix-lipski.spacelix-1.0.0/theme.json".source = ''${theme}/vsc.json'';
         };
         home.sessionPath = [
           "$HOME/.emacs.d/bin" 
@@ -83,26 +74,14 @@ in with palette; with fontConfig; {
         xsession = {
           enable = true;
           windowManager.xmonad = {
-          enable = true;
-	      enableContribAndExtras = true;
+            enable = true;
+	        enableContribAndExtras = true;
             config = pkgs.writeText "xmonad.hs" 
               (utils.interpolateColors (palette // { fontSize = (builtins.toString fontSize); fontFace = font; })
                 (builtins.readFile ./resources/xmonad.hs)
               );
 	      };
 	    };
-        # services.spotifyd = {
-        #   enable = true;
-        #   settings.global = {
-        #     username = "217mgssuzohnkwxlhrh3vvu6q";
-        #     password_cmd = "${pkgs.pass}/bin/pass spotify";
-        #     initial_volume = "70";
-        #   };
-        # };
-        services.picom = {
-          enable = true;
-          shadow = true;
-        };
         systemd.user.sessionVariables.DISPLAY = ":0";
         systemd.user.services.xcape = {
           Unit = {
@@ -120,7 +99,7 @@ in with palette; with fontConfig; {
           };
         };
         services.emacs.enable = true;
-        programs = (import ./programs.nix) palette font fontSize lib pkgs config;
+        programs = (import ./programs.nix) utils palette font fontSize lib pkgs config;
       };
     };
   };
