@@ -1,10 +1,11 @@
 rec {
-  # black   = "#121212";
-  # grey    = "#555555";
+  # black   = "#000000";
+  black   = "#121212";
+  grey    = "#555555";
   
   # black   = "#121c2a";
-  black   = "#112233";
-  grey    = "#4a73a7";
+  # black   = "#112233";
+  # grey    = "#4a73a7";
 
   white   = "#f5f5df";
   yellow  = "#ccbb00";
