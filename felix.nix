@@ -1,18 +1,17 @@
 { lib, pkgs, config, inputs, ... }:
 let
-  spacelixVariant = "dark";
-  # palette = config.ui.spacelix."${spacelixVariant}".withGrey;
-  palette = import ./gruvbox.nix;
-  font = "Terminus";
+  spacelix = config.ui.spacelix."dark".withGrey;
+  gruvboxPalette = (import ./gruvbox.nix);
+  switchLight = attrset: attrset // { black = attrset.white; white = attrset.black; };
   utils = (import ./utils.nix) {lib=lib;};
   futhark-vim = pkgs.vimUtils.buildVimPlugin {
     name = "futhark-vim";
     src = inputs.futhark-vim;
   };
+  
+  palette = spacelix;
+  font = "Terminus";
   wallpaper = (import ./wallpaper.nix) {inherit pkgs inputs palette;};
-
-  # change to palette_felix for dark mode
-  palette = palette_sara;
 in
 with palette; {
   console.colors = map (lib.strings.removePrefix "#") ([
@@ -129,6 +128,7 @@ with palette; {
               xc       = "xcape -e 'Super_L=Escape'";
               gcroots  = "nix-store --gc --print-roots | grep home/"; 
               forkterm = "alacritty & disown";
+              ssha     = "eval `ssh-agent`; ssh-add";
             };
             localVariables = {
               PROMPT = "%B%F{blue}%n%f %F{green}%~%f%b ";

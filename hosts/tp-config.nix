@@ -9,6 +9,8 @@
     device = "/dev/sda";
   };
 
+  # programs.steam.enable = true;
+
   networking = {
     hostName = "tp";
     networkmanager.enable = true;
@@ -25,4 +27,8 @@
     driSupport = true;
     driSupport32Bit = true;
   };
+
+  environment.systemPackages = with pkgs; [
+    # steam
+  ];
 }
