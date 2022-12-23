@@ -9,11 +9,11 @@ in {
   programs.ssh.startAgent = true;
   
   networking.extraHosts = ''
-    127.0.0.1 youtube.com
-    ::1 youtube.com
-    127.0.0.1 www.youtube.com
-    ::1 www.youtube.com
   '';
+    # 127.0.0.1 youtube.com
+    # ::1 youtube.com
+    # 127.0.0.1 www.youtube.com
+    # ::1 www.youtube.com
   # 127.0.0.1 4chan.org
   # 127.0.0.1 www.4chan.org
   # 127.0.0.1 4channel.org
@@ -35,8 +35,25 @@ in {
     extraOptions = "experimental-features = nix-command flakes";
     # binaryCachePublicKeys = [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];
     # binaryCaches = [ "https://hydra.iohk.io" ];
-    settings.trusted-public-keys = [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];
-    settings.substituters = [ "https://hydra.iohk.io" ];
+
+    # settings.trusted-public-keys = [ 
+    #   "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ="
+    # ];
+    # # settings.substituters = [ "https://hydra.iohk.io" ];
+    # settings.substituters = [ 
+    #   "https://cache.nixos.org"
+    # ];
+    settings = {
+      substituters = [
+          "https://nix-community.cachix.org"
+          "https://cache.nixos.org/"
+          "https://hydra.iohk.io"
+      ];
+      trusted-public-keys = [
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ="
+      ];
+    };
   };
 
   nixpkgs.config.allowUnfree = true;

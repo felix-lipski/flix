@@ -28,6 +28,7 @@ palette: lib: pkgs: with palette; {
     "2"      = "nvim -c':e#<2'";
     "3"      = "nvim -c':e#<3'";
     foo      = "${findFlake} | xargs nvim";
+    shutup   = "shutdown now";
   };
   localVariables = {
     PROMPT = "%B%F{blue}%n%f %F{green}%~%f%b ";
