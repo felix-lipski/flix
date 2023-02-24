@@ -1,29 +1,29 @@
-;; doom-gruvbox-theme.el --- inspired by morhetz Gruvbox -*- lexical-binding: t; no-byte-compile: t; -*-
+;; doom-spacelix-theme.el --- inspired by morhetz Gruvbox -*- lexical-binding: t; no-byte-compile: t; -*-
 (require 'doom-themes)
 
 ;; Compiler pacifier
 (defvar modeline-bg)
 
 ;;
-(defgroup doom-gruvbox-theme nil
-  "Options for doom-gruvbox."
+(defgroup doom-spacelix-theme nil
+  "Options for doom-spacelix."
   :group 'doom-themes)
 
-(defcustom doom-gruvbox-brighter-comments nil
+(defcustom doom-spacelix-brighter-comments nil
   "If non-nil, comments will be highlighted in more vivid colors."
-  :group 'doom-gruvbox-theme
+  :group 'doom-spacelix-theme
   :type 'boolean)
 
-(defcustom doom-gruvbox-padded-modeline doom-themes-padded-modeline
+(defcustom doom-spacelix-padded-modeline doom-themes-padded-modeline
   "If non-nil, adds a 4px padding to the mode-line. Can be an integer to
 determine the exact padding."
-  :group 'doom-gruvbox-theme
+  :group 'doom-spacelix-theme
   :type '(choice integer boolean))
 
-(defcustom doom-gruvbox-dark-variant nil
+(defcustom doom-spacelix-dark-variant nil
   "A choice of \"hard\" or \"soft\" can be used to change the
 background contrast. All other values default to \"medium\"."
-  :group 'doom-gruvbox-theme
+  :group 'doom-spacelix-theme
   :type  'string)
 
 ;;
@@ -32,12 +32,12 @@ background contrast. All other values default to \"medium\"."
 
   ;; name        gui       256       16
   ((bg
-    (cond ((equal doom-gruvbox-dark-variant "hard") '("#black" "#black" nil))   ; bg0_h
-          ((equal doom-gruvbox-dark-variant "soft") '("#black" "#black" nil))   ; bg0_s
+    (cond ((equal doom-spacelix-dark-variant "hard") '("#black" "#black" nil))   ; bg0_h
+          ((equal doom-spacelix-dark-variant "soft") '("#black" "#black" nil))   ; bg0_s
           (t                                        '("#black" "#black" nil)))) ; bg0
    (bg-alt
-    (cond ((equal doom-gruvbox-dark-variant "hard") '("#black" "#black" nil))     ; (self-defined)
-          ((equal doom-gruvbox-dark-variant "soft") '("#black" "#black" nil))   ; bg0
+    (cond ((equal doom-spacelix-dark-variant "hard") '("#black" "#black" nil))     ; (self-defined)
+          ((equal doom-spacelix-dark-variant "soft") '("#black" "#black" nil))   ; bg0
           (t                                        '("#black" "#black" nil)))) ; bg_h
    (bg-alt2    '("#blue" "#blue" "brown"      )) ; bg2 (for region, selection etc.)
 
@@ -53,7 +53,7 @@ background contrast. All other values default to \"medium\"."
    (fg         '("#white" "#white" "brightwhite")) ; fg/fg1
    (fg-alt     '("#white" "#white" "brightwhite")) ; fg2
 
-   ;; Standardized official colours from gruvbox
+   ;; Standardized official colours from spacelix
    (grey        '("#grey" "#grey" "brightblack"))   ; gray
    (red         '("#red" "#red" "red"))           ; bright-red
    (magenta     '("#magenta" "#magenta" "magenta"))       ; red
@@ -75,7 +75,7 @@ background contrast. All other values default to \"medium\"."
    (selection      bg-alt2)
    (builtin        orange)
    (comments       grey)
-   (doc-comments   (if doom-gruvbox-brighter-comments (doom-lighten magenta 0.2) (doom-lighten fg-alt 0.25)))
+   (doc-comments   (if doom-spacelix-brighter-comments (doom-lighten magenta 0.2) (doom-lighten fg-alt 0.25)))
    (constants      green)
    (functions      green)
    (keywords       blue)
@@ -96,9 +96,9 @@ background contrast. All other values default to \"medium\"."
 
    ;; custom categories
    (-modeline-pad
-    (when doom-gruvbox-padded-modeline
-      (if (integerp doom-gruvbox-padded-modeline)
-          doom-gruvbox-padded-modeline
+    (when doom-spacelix-padded-modeline
+      (if (integerp doom-spacelix-padded-modeline)
+          doom-spacelix-padded-modeline
         4)))
    (modeline-bg bg-alt2)
    (modeline-fg (doom-lighten fg-alt 0.25))
@@ -273,4 +273,4 @@ background contrast. All other values default to \"medium\"."
   ;; ()
   )
 
-;;; doom-gruvbox-theme.el ends here
+;;; doom-spacelix-theme.el ends here

@@ -8,20 +8,20 @@ in {
   networking.wireguard.enable = true;
   programs.ssh.startAgent = true;
   
-  networking.extraHosts = ''
-  '';
-    # 127.0.0.1 youtube.com
-    # ::1 youtube.com
-    # 127.0.0.1 www.youtube.com
-    # ::1 www.youtube.com
-  # 127.0.0.1 4chan.org
-  # 127.0.0.1 www.4chan.org
-  # 127.0.0.1 4channel.org
-  # 127.0.0.1 boards.4channel.org
-  # 127.0.0.1 reddit.com
-  # 127.0.0.1 www.reddit.com
-  # 127.0.0.1 www.frenschan.org
-  # 127.0.0.1 frenschan.org
+  # networking.extraHosts = ''
+# 127.0.0.1 www.frenschan.org
+# 127.0.0.1 frenschan.org
+# 127.0.0.1 4chan.org
+# 127.0.0.1 www.4chan.org
+# 127.0.0.1 4channel.org
+# 127.0.0.1 boards.4channel.org
+# 127.0.0.1 youtube.com
+# ::1 youtube.com
+# 127.0.0.1 www.youtube.com
+# ::1 www.youtube.com
+# 127.0.0.1 twitter.com
+# ::1 twitter.com
+  # '';
 
   security.pam.services.pass.gnupg.enable = true;
 
@@ -86,6 +86,7 @@ in {
 
 
   environment.systemPackages = with pkgs; [
+    moreutils
     inetutils pciutils coreutils udev usbutils
     file ripgrep lf vimv wget unzip zip p7zip
     git vim tmux gnumake gcc cmake
