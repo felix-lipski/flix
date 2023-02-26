@@ -2,7 +2,6 @@
   inputs = {
     nixpkgs.url       = github:NixOS/nixpkgs/nixos-unstable;
     nixpkgs-new.url       = github:NixOS/nixpkgs/nixos-unstable;
-    # nixpkgs-new.url   = github:NixOS/nixpkgs/nixos-22.05;
     home-manager.url  = github:nix-community/home-manager;
     home-manager-new.url  = github:nix-community/home-manager/release-22.05;
     nvim-nightly.url  = github:nix-community/neovim-nightly-overlay;
